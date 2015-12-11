@@ -1,0 +1,171 @@
+﻿[
+{
+"single_metrics":{
+"3":{
+	"id":3,
+	"shortName":"1-Day Min",
+	"longName":"Annual minima, 1-day mean",
+	"units":"cfs",
+	"fld":"X1_Day_Min"
+	},
+"4":{
+	"id":4,
+	"shortName":"1-Day Max",
+	"longName":"Annual maxima, 1-day mean",
+	"units":"cfs",
+	"fld":"X1_Day_Max"
+	},
+"5":{
+	"id":5,
+	"shortName":"3-Day Min",
+	"longName":"Annual minima, 3-day mean",
+	"units":"cfs",
+	"fld":"X3_Day_Min"
+	},
+"6":{
+	"id":6,
+	"shortName":"3-Day Max",
+	"longName":"Annual maxima, 3-day mean",
+	"units":"cfs",
+	"fld":"X3_Day_Max"
+	},
+"7":{
+	"id":7,
+	"shortName":"7-Day Min",
+	"longName":"Annual minima, 7-day mean",
+	"units":"cfs",
+	"fld":"X7_Day_Min"
+	},
+"8":{
+	"id":8,
+	"shortName":"7-Day Max",
+	"longName":"Annual maxima, 7-day mean",
+	"units":"cfs",
+	"fld":"X7_Day_Max"
+	},
+"9":{
+	"id":9,
+	"shortName":"30-Day Min",
+	"longName":"Annual minima, 30-day mean",
+	"units":"cfs",
+	"fld":"X30_Day_Min"
+	},
+"10":{
+	"id":10,
+	"shortName":"30-Day Max",
+	"longName":"Annual maxima, 30-day mean",
+	"units":"cfs",
+	"fld":"X30_Day_Max"
+	},
+"11":{
+	"id":11,
+	"shortName":"90-Day Min",
+	"longName":"Annual minima, 90-day mean",
+	"units":"cfs",
+	"fld":"X90_Day_Min"
+	},
+"12":{
+	"id":12,
+	"shortName":"90-Day Max",
+	"longName":"Annual maxima, 90-day mean",
+	"units":"cfs",
+	"fld":"X90_Day_Max"
+	},
+"13":{
+	"id":13,
+	"shortName":"Zero flow days",
+	"longName":"Number of zero flow days",
+	"fld":"Zero_flow_days"
+	},
+"14":{
+	"id":14,
+	"shortName":"Baseflow index",
+	"longName":"Base flow index: 7-day minimum flow/mean flow for year",
+	"fld":"Base_index"
+	},
+"15":{
+	"id":15,
+	"shortName":"Date of Min",
+	"longName":"Julian date of each annual 1-day minimum",
+	"fld":"Min"
+	},
+"16":{
+	"id":16,
+	"shortName":"Date of Max",
+	"longName":"Julian date of each annual 1-day maximum",
+	"fld":"Max"
+	},
+"17":{
+	"id":17,
+	"shortName":"Low pulse count",
+	"longName":"Number of low pulses within each water year",
+	"fld":"Low_pulse_number"
+	},
+"18":{
+	"id":18,
+	"shortName":"High pulse count",
+	"longName":"Number of high pulses within each water year",
+	"fld":"High_pulse_number"
+	},
+"19":{
+	"id":19,
+	"shortName":"Low pulse duration",
+	"longName":"Mean duration of low pulses",
+	"fld":"Low_pulse_length",
+	"units":"days"
+	},
+"20":{
+	"id":20,
+	"shortName":"High pulse duration",
+	"longName":"Mean duration of high pulses",
+	"units":"days",
+	"fld":"High_pulse_length"
+}
+},
+"time_series":[
+{
+"id":1,
+"shortName":"Monthly median flow",
+"longName":"Monthly median flow",
+"units":"cfs"
+},
+{
+"id":2,
+"shortName":"Monthly mean flow",
+"longName":"Monthly mean flow",
+"units":"cfs"
+}
+],
+"ecochange":{
+	"surplus":{
+		"id":21,
+		"name":"Ecosurplus"
+	},
+	"deficit":{
+		"id":22,
+		"name":"Ecodeficit"
+	}
+},
+"scenarios":{
+	"1":{
+		"scenarioName":"Baseline",
+		"displayName":"Baseline"
+	},
+	"2":{
+		"scenarioName":"Increased Water Use",
+		"displayName":"Projected Water Use",
+		"graphicCode":"WaterUse_ggplot"
+	},
+	"3":{
+		"scenarioName":"Climate",
+		"displayName":"Climate Change",
+		"graphicCode":"Climate_ggplot"
+	},
+	"4":{
+		"scenarioName":"Climate Plus Inc Water Use",
+		"displayName":"Projected Water Use with Climate Change",
+		"graphicCode":"ClimateWaterUse_ggplot"
+	}
+}
+}
+]

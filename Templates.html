@@ -1,0 +1,1536 @@
+﻿<div>
+    <div id="template-flowApp-landing">
+        <style>
+            span.esriLegendServiceLabel {
+                display: block;
+                padding: 5px 0px 5px 0px;
+                margin: 10px 0px 0px 0px;
+                font-size: 14px;
+            }
+
+            .esriLegendLayerLabel {
+                display: none;
+            }
+        </style>
+
+
+
+        <div style="padding:10px 10px 10px 10px">
+            <p>Welcome!  This tool can help you view and analyze watershed data.  You have 3 options for getting started:</p>
+            <p>
+                <b>Option 1:</b> Search for a Location (e.g. <i>town,state</i> )<br />
+                <input type="text" id="txtLocation" style="width:250px" />&nbsp;<button id="btnFindLocation">Find Location</button>
+            </p>
+            <p>
+                <b>Option 2:</b> Click on any HUC8 watershed in the map to view more detailed HUC12 watershed data.
+            </p>
+            <p>
+                <b>Option 3:</b> View all available HUC12s and make your selections from there.<br />
+                <button id="btnShowAll">Show All HUC12s</button>
+            </p>
+        </div>
+       
+        </div>
+        <div id="template-flowApp-huc12s">
+            <style>
+                span.esriLegendServiceLabel {
+                    display: block;
+                    padding:5px 0px 5px 0px;
+                    margin: 10px 0px 0px 0px;
+                    font-size:14px;
+                }
+
+                .esriLegendLayerLabel {                 
+                    display: none;
+                }                
+            </style>
+            <div style="padding:10px 10px 10px 10px">
+                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span>
+                <p></p>
+                Now that you are viewing smaller HUC12 watersheds, you can color code them in the map using the metrics in the drop down list below.<p></p>
+
+                You can also click on the HUC12 watersheds in the map to view more detailed information.
+                <p></p>
+                Select a single value metric:<p></p>
+                <select id="ddSingleMetric"></select><p></p>
+                <table style="border:none;margin-top:20px;">
+                    <tr>
+                        <td width="250">
+                            <button id="btnStartOver">Start Over</button>
+                        </td>
+                        <td width="250">
+                           &nbsp;
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <div id="template-flowApp-HUC12Navigate">
+            <style>
+                span.esriLegendServiceLabel {
+                    display: block;
+                    padding: 5px 0px 5px 0px;
+                    margin: 10px 0px 0px 0px;
+                    font-size: 14px;
+                }
+
+                .esriLegendLayerLabel {
+                    display: none;
+                }
+            </style>
+
+            <div style="padding:10px 10px 10px 10px">
+                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
+                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span>
+                <div style="padding:10px 10px 10px 10px">
+                    <input type="radio" name="HUC12Option" id="radView" />&nbsp;View HUC12 Data&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="HUC12Option" id="radNavigate" checked />&nbsp;Navigate
+                   
+                </div>
+                <fieldset id="fldNavOptions" style="margin-bottom:0px;">
+                    <legend>Navigation Options</legend>
+                    <table style="width:500px" align="center" border= "0">
+                        <tr>
+                            <td colspan="3">
+                                Shows the hydrologically connected units through which water flows.
+                            </td>
+                        </tr>
+                        <tr style="height:30px">
+                            <td style="width:100px">Direction:</td>
+                            <td style="width:100px"><input type="radio" name="direction" id="radUpstream" checked />&nbsp;upstream</td>
+                            <td style="width:300px"><input type="radio" name="direction" id="radDownstream" />&nbsp;downstream</td>
+                        </tr>
+                        <tr style="height:30px">
+                            <td>Limit By:</td>
+                            <td><input type="radio" name="limit" id="radTime" checked />&nbsp;time (hrs)</td>
+                            <td>
+                                <input type="radio" name="limit" id="radDistanceMi" />&nbsp;distance (mi)
+                                &nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="limit" id="radDistanceKm" />&nbsp;distance (km)
+                            </td>
+                        </tr>
+                        <tr style="height:30px">
+                            <td>Limit Value:</td>
+                            <td colspan="2"><input type="text" style="width:50px;display:inline;height:25px;vertical-align:middle;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px" id="txtLimit" />&nbsp;&nbsp;<span id="spanLimitLabel">(hrs)</span></td>
+                        </tr>
+
+                        <tr style="height:40px;vertical-align:middle">
+                            <td colspan="3">
+                                <div align="center">
+                                    <button id="btnNavigation">Start Navigation</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </fieldset>
+                <table style="border:none;margin-top:0px;">
+                    <tr>
+                        <td width="250">
+                            <button id="btnStartOver">Start Over</button>
+                        </td>
+                        <td width="250">
+                            <div align="right">
+                                <button id="btnClearHUC12">Clear Selected HUC12</button>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+        </div>
+        <div id="template-flowApp-HUC12Selected">
+            <style>
+                span.esriLegendServiceLabel {
+                    display: block;
+                    padding: 5px 0px 5px 0px;
+                    margin: 10px 0px 0px 0px;
+                    font-size: 14px;
+                }
+
+                .esriLegendLayerLabel {
+                    display: none;
+                }
+            </style>
+
+            <div style="padding:10px 10px 10px 10px">
+                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
+                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span>
+                <input type="hidden" id="hidHUC12ID"/>
+                <div style="padding:10px 10px 10px 10px">
+                    <input type="radio" name="HUC12Option" id="radHUC12View" checked />&nbsp;View HUC12 Data&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="HUC12Option" id="radHUC12Navigate" />&nbsp;Navigate
+                    
+                </div>
+                <div id="divTabs">
+                    <ul>
+
+                        <li><a href="#divTabs-1" style="font-size:12px">Single Metrics</a></li>
+
+                        <li><a href="#divTabs-2" style="font-size:12px">Time Series</a></li>
+
+                        <li><a href="#divTabs-4" style="font-size:12px">Ecochange</a></li>
+
+                        <li><a href="#divTabs-3" style="font-size:12px">Catchments</a></li>
+
+                    </ul>
+
+                    <div id="divTabs-1">          
+                        <div style="padding-bottom:10px">
+                            
+                            <input type="radio" name="scenarioOption" id="radCurrent" checked />&nbsp;Current
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="scenarioOption" id="radScenarios" />&nbsp;Scenarios
+                        </div>
+                        <div id="divCurrent" style="display:none">
+                            <table>
+                                <tr>
+                                    <td colspan="2" style="padding:0px 0px 0px 0px">
+                                        <img id="imgHydrograph" width="388" height="277" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Metric</td>
+                                                <td style="font-size:10px;font-weight:bold">Annual minima (cfs)</td>
+                                                <td style="font-size:10px;font-weight:bold">Annual maxima (cfs)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">1 Day</td>
+                                                <td id="td3" style="font-size:10px"></td>
+                                                <td id="td4" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">3 Day</td>
+                                                <td id="td5" style="font-size:10px"></td>
+                                                <td id="td6" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">7 Day</td>
+                                                <td id="td7" style="font-size:10px"></td>
+                                                <td id="td8" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">30 Day</td>
+                                                <td id="td9" style="font-size:10px"></td>
+                                                <td id="td10" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">90 Day</td>
+                                                <td id="td11" style="font-size:10px"></td>
+                                                <td id="td12" style="font-size:10px"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Pulse</td>
+                                                <td style="font-size:10px;font-weight:bold">Low</td>
+                                                <td style="font-size:10px;font-weight:bold">High</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Count</td>
+                                                <td id="td17" style="font-size:10px"></td>
+                                                <td id="td18" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Duration (days)</td>
+                                                <td id="td19" style="font-size:10px"></td>
+                                                <td id="td20" style="font-size:10px"></td>
+                                            </tr>
+
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td style="font-size: 10px; font-weight: bold">Zero flow days:</td>
+                                                <td style="font-size:10px" id="td13"></td>
+                                                <td style="font-size: 10px; font-weight: bold">Date of Min</td>
+                                                <td style="font-size:10px" id="td15"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; font-weight: bold">Baseflow index:</td>
+                                                <td style="font-size:10px" id="td14"></td>
+                                                <td style="font-size: 10px; font-weight: bold">Date of Max</td>
+                                                <td style="font-size:10px" id="td16"></td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div><!--end divCurrent-->
+                        <div id= "divScenarios" style="display:none">
+                            <table id= "tblScenarios">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th style="text-align:center">Baseline</th>                                        
+                                        <th style="text-align:center">Projected Water Use</th>
+                                        <th style="text-align:center">&#916;, %&#916;</th>
+                                        <th style="text-align:center">Climate Change</th>
+                                        <th style ="text-align:center">&#916;, %&#916;</th>
+                                        <th style="text-align:center">Projected Water Use with Climate Change</th>
+                                        <th style ="text-align:center">&#916;, %&#916;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            1-Day Min (cfs)
+                                        </td>
+                                        <td id= "td_1_3"></td>                                        
+                                        <td id="td_2_3"></td>
+                                        <td id="td_2_3Change"></td>
+                                        <td id="td_3_3"></td>
+                                        <td id="td_3_3Change"></td>
+                                        <td id="td_4_3"></td>
+                                        <td id="td_4_3Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1-Day Max
+                                        </td>
+                                        <td id="td_1_4"></td>                                       
+                                        <td id="td_2_4"></td>
+                                        <td id="td_2_4Change"></td>
+                                        <td id="td_3_4"></td>
+                                        <td id="td_3_4Change"></td>
+                                        <td id="td_4_4"></td>
+                                        <td id="td_4_4Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Min
+                                        </td>
+                                        <td id="td_1_5"></td>                                       
+                                        <td id="td_2_5"></td>
+                                        <td id="td_2_5Change"></td>
+                                        <td id="td_3_5"></td>
+                                        <td id="td_3_5Change"></td>
+                                        <td id="td_4_5"></td>
+                                        <td id="td_4_5Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Max
+                                        </td>
+                                        <td id="td_1_6"></td>                                        
+                                        <td id="td_2_6"></td>
+                                        <td id="td_2_6Change"></td>
+                                        <td id="td_3_6"></td>
+                                        <td id="td_3_6Change"></td>
+                                        <td id="td_4_6"></td>
+                                        <td id="td_4_6Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Min
+                                        </td>
+                                        <td id="td_1_7"></td>                                        
+                                        <td id="td_2_7"></td>
+                                        <td id="td_2_7Change"></td>
+                                        <td id="td_3_7"></td>
+                                        <td id="td_3_7Change"></td>
+                                        <td id="td_4_7"></td>
+                                        <td id="td_4_7Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Max
+                                        </td>
+                                        <td id="td_1_8"></td>                                       
+                                        <td id="td_2_8"></td>
+                                        <td id="td_2_8Change"></td>
+                                        <td id="td_3_8"></td>
+                                        <td id="td_3_8Change"></td>
+                                        <td id="td_4_8"></td>
+                                        <td id="td_4_8Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Min
+                                        </td>
+                                        <td id="td_1_9"></td>                                        
+                                        <td id="td_2_9"></td>
+                                        <td id="td_2_9Change"></td>
+                                        <td id="td_3_9"></td>
+                                        <td id="td_3_9Change"></td>
+                                        <td id="td_4_9"></td>
+                                        <td id="td_4_9Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Max
+                                        </td>
+                                        <td id="td_1_10"></td>                                        
+                                        <td id="td_2_10"></td>
+                                        <td id="td_2_10Change"></td>
+                                        <td id="td_3_10"></td>
+                                        <td id="td_3_10Change"></td>
+                                        <td id="td_4_10"></td>
+                                        <td id="td_4_10Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Min
+                                        </td>
+                                        <td id="td_1_11"></td>                                        
+                                        <td id="td_2_11"></td>
+                                        <td id="td_2_11Change"></td>
+                                        <td id="td_3_11"></td>
+                                        <td id="td_3_11Change"></td>
+                                        <td id="td_4_11"></td>
+                                        <td id="td_4_11Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Max
+                                        </td>
+                                        <td id="td_1_12"></td>                                        
+                                        <td id="td_2_12"></td>
+                                        <td id="td_2_12Change"></td>
+                                        <td id="td_3_12"></td>
+                                        <td id="td_3_12Change"></td>
+                                        <td id="td_4_12"></td>
+                                        <td id="td_4_12Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Zero flow days
+                                        </td>
+                                        <td id="td_1_13"></td>                                        
+                                        <td id="td_2_13"></td>
+                                        <td id="td_2_13Change"></td>
+                                        <td id="td_3_13"></td>
+                                        <td id="td_3_13Change"></td>
+                                        <td id="td_4_13"></td>
+                                        <td id="td_4_13Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Baseflow index
+                                        </td>
+                                        <td id="td_1_14"></td>                                        
+                                        <td id="td_2_14"></td>
+                                        <td id="td_2_14Change"></td>
+                                        <td id="td_3_14"></td>
+                                        <td id="td_3_14Change"></td>
+                                        <td id="td_4_14"></td>
+                                        <td id="td_4_14Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Min
+                                        </td>
+                                        <td id="td_1_15"></td>                                        
+                                        <td id="td_2_15"></td>
+                                        <td id="td_2_15Change"></td>
+                                        <td id="td_3_15"></td>
+                                        <td id="td_3_15Change"></td>
+                                        <td id="td_4_15"></td>
+                                        <td id="td_4_15Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Max
+                                        </td>
+                                        <td id="td_1_16"></td>                                        
+                                        <td id="td_2_16"></td>
+                                        <td id="td_2_16Change"></td>
+                                        <td id="td_3_16"></td>
+                                        <td id="td_3_16Change"></td>
+                                        <td id="td_4_16"></td>
+                                        <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse count
+                                        </td>
+                                        <td id="td_1_17"></td>                                       
+                                        <td id="td_2_17"></td>
+                                        <td id="td_2_17Change"></td>
+                                        <td id="td_3_17"></td>
+                                        <td id="td_3_17Change"></td>
+                                        <td id="td_4_17"></td>
+                                        <td id="td_4_17Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse count
+                                        </td>
+                                        <td id="td_1_18"></td>                                       
+                                        <td id="td_2_18"></td>
+                                        <td id="td_2_18Change"></td>
+                                        <td id="td_3_18"></td>
+                                        <td id="td_3_18Change"></td>
+                                        <td id="td_4_18"></td>
+                                        <td id="td_4_18Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse duration
+                                        </td>
+                                        <td id="td_1_19"></td>                                       
+                                        <td id="td_2_19"></td>
+                                        <td id="td_2_19Change"></td>
+                                        <td id="td_3_19"></td>
+                                        <td id="td_3_19Change"></td>
+                                        <td id="td_4_19"></td>
+                                        <td id="td_4_19Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse duration
+                                        </td>
+                                        <td id="td_1_20"></td>                                       
+                                        <td id="td_2_20"></td>
+                                        <td id="td_2_20Change"></td>
+                                        <td id="td_3_20"></td>
+                                        <td id="td_3_20Change"></td>
+                                        <td id="td_4_20"></td>
+                                        <td id="td_4_20Change"></td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="divWaitSingle">
+                            <div class="progress-label" id="divProgressLabel" style="font-weight:bold;font-size:12px;padding:5px 5px 5px 5px">Retrieving data, please wait...</div>
+
+                            <div id="progressbar"></div>
+                        </div>
+                    </div>
+
+                    <div id="divTabs-2" style="height:350px;">
+
+                        <select id="ddTimeSeriesMetrics"></select>                        
+                        <div id="divChart" style="margin-top:15px;"></div>
+
+
+                    </div>
+                    <div id="divTabs-4" style="padding:0px 0px 0px 0px">     
+                        <div style="padding:10px 0px 10px 10px">
+                            <select id="ddEcoScenario" style="width:80%"></select>
+                        </div>              
+                        <img id="imgEcochange" width="420" height="300" /> 
+                        <table style="border:none">
+                            <tr>
+                                <td width= "100" style="font-weight:bold">
+                                    Ecosurplus:
+                                </td>
+                                <td width= "200">
+                                    <span id="spanEcosurplus" />
+                                </td>
+                                <td width="100" style="font-weight:bold">
+                                    Ecodeficit:
+                                </td>
+                                <td>
+                                    <span id="spanEcodeficit" />
+                                </td>
+                            </tr>
+                        </table>
+                             
+                                                           
+                    </div>
+                        <div id="divTabs-3">
+                            <div id= "divCatchments">
+                                Click on a catchment to view the single metrics.
+                            </div>                                    
+                            <div id="divCatchmentScenarios" style="display:none">
+                                <div style="padding:10px 0px 10px 0px;font-size:12px;">
+                                    Catchment:&nbsp;
+                                    <span id="spanCatchmentID"></span>
+                                </div>
+                                <table id="tblCatchmentScenarios">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Baseline</th>
+                                            <th>Projected Water Use</th>
+                                            <th>&#916;, %&#916;</th>
+                                            <th>Climate Change</th>
+                                            <th>&#916;, %&#916;</th>
+                                            <th>Projected Water Use with Climate Change</th>
+                                            <th>&#916;, %&#916;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                1-Day Min (cfs)
+                                            </td>
+                                            <td id="td_1_3"></td>
+                                            <td id="td_2_3"></td>
+                                            <td id="td_2_3Change"></td>
+                                            <td id="td_3_3"></td>
+                                            <td id="td_3_3Change"></td>
+                                            <td id="td_4_3"></td>
+                                            <td id="td_4_3Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                1-Day Max
+                                            </td>
+                                            <td id="td_1_4"></td>
+                                            <td id="td_2_4"></td>
+                                            <td id="td_2_4Change"></td>
+                                            <td id="td_3_4"></td>
+                                            <td id="td_3_4Change"></td>
+                                            <td id="td_4_4"></td>
+                                            <td id="td_4_4Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                3-Day Min
+                                            </td>
+                                            <td id="td_1_5"></td>
+                                            <td id="td_2_5"></td>
+                                            <td id="td_2_5Change"></td>
+                                            <td id="td_3_5"></td>
+                                            <td id="td_3_5Change"></td>
+                                            <td id="td_4_5"></td>
+                                            <td id="td_4_5Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                3-Day Max
+                                            </td>
+                                            <td id="td_1_6"></td>
+                                            <td id="td_2_6"></td>
+                                            <td id="td_2_6Change"></td>
+                                            <td id="td_3_6"></td>
+                                            <td id="td_3_6Change"></td>
+                                            <td id="td_4_6"></td>
+                                            <td id="td_4_6Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                7-Day Min
+                                            </td>
+                                            <td id="td_1_7"></td>
+                                            <td id="td_2_7"></td>
+                                            <td id="td_2_7Change"></td>
+                                            <td id="td_3_7"></td>
+                                            <td id="td_3_7Change"></td>
+                                            <td id="td_4_7"></td>
+                                            <td id="td_4_7Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                7-Day Max
+                                            </td>
+                                            <td id="td_1_8"></td>
+                                            <td id="td_2_8"></td>
+                                            <td id="td_2_8Change"></td>
+                                            <td id="td_3_8"></td>
+                                            <td id="td_3_8Change"></td>
+                                            <td id="td_4_8"></td>
+                                            <td id="td_4_8Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                30-Day Min
+                                            </td>
+                                            <td id="td_1_9"></td>
+                                            <td id="td_2_9"></td>
+                                            <td id="td_2_9Change"></td>
+                                            <td id="td_3_9"></td>
+                                            <td id="td_3_9Change"></td>
+                                            <td id="td_4_9"></td>
+                                            <td id="td_4_9Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                30-Day Max
+                                            </td>
+                                            <td id="td_1_10"></td>
+                                            <td id="td_2_10"></td>
+                                            <td id="td_2_10Change"></td>
+                                            <td id="td_3_10"></td>
+                                            <td id="td_3_10Change"></td>
+                                            <td id="td_4_10"></td>
+                                            <td id="td_4_10Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                90-Day Min
+                                            </td>
+                                            <td id="td_1_11"></td>
+                                            <td id="td_2_11"></td>
+                                            <td id="td_2_11Change"></td>
+                                            <td id="td_3_11"></td>
+                                            <td id="td_3_11Change"></td>
+                                            <td id="td_4_11"></td>
+                                            <td id="td_4_11Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                90-Day Max
+                                            </td>
+                                            <td id="td_1_12"></td>
+                                            <td id="td_2_12"></td>
+                                            <td id="td_2_12Change"></td>
+                                            <td id="td_3_12"></td>
+                                            <td id="td_3_12Change"></td>
+                                            <td id="td_4_12"></td>
+                                            <td id="td_4_12Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Zero flow days
+                                            </td>
+                                            <td id="td_1_13"></td>
+                                            <td id="td_2_13"></td>
+                                            <td id="td_2_13Change"></td>
+                                            <td id="td_3_13"></td>
+                                            <td id="td_3_13Change"></td>
+                                            <td id="td_4_13"></td>
+                                            <td id="td_4_13Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Baseflow index
+                                            </td>
+                                            <td id="td_1_14"></td>
+                                            <td id="td_2_14"></td>
+                                            <td id="td_2_14Change"></td>
+                                            <td id="td_3_14"></td>
+                                            <td id="td_3_14Change"></td>
+                                            <td id="td_4_14"></td>
+                                            <td id="td_4_14Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Date of Min
+                                            </td>
+                                            <td id="td_1_15"></td>
+                                            <td id="td_2_15"></td>
+                                            <td id="td_2_15Change"></td>
+                                            <td id="td_3_15"></td>
+                                            <td id="td_3_15Change"></td>
+                                            <td id="td_4_15"></td>
+                                            <td id="td_4_15Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Date of Max
+                                            </td>
+                                            <td id="td_1_16"></td>
+                                            <td id="td_2_16"></td>
+                                            <td id="td_2_16Change"></td>
+                                            <td id="td_3_16"></td>
+                                            <td id="td_3_16Change"></td>
+                                            <td id="td_4_16"></td>
+                                            <td id="td_4_16Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Low pulse count
+                                            </td>
+                                            <td id="td_1_17"></td>
+                                            <td id="td_2_17"></td>
+                                            <td id="td_2_17Change"></td>
+                                            <td id="td_3_17"></td>
+                                            <td id="td_3_17Change"></td>
+                                            <td id="td_4_17"></td>
+                                            <td id="td_4_17Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                High pulse count
+                                            </td>
+                                            <td id="td_1_18"></td>
+                                            <td id="td_2_18"></td>
+                                            <td id="td_2_18Change"></td>
+                                            <td id="td_3_18"></td>
+                                            <td id="td_3_18Change"></td>
+                                            <td id="td_4_18"></td>
+                                            <td id="td_4_18Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Low pulse duration
+                                            </td>
+                                            <td id="td_1_19"></td>
+                                            <td id="td_2_19"></td>
+                                            <td id="td_2_19Change"></td>
+                                            <td id="td_3_19"></td>
+                                            <td id="td_3_19Change"></td>
+                                            <td id="td_4_19"></td>
+                                            <td id="td_4_19Change"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                High pulse duration
+                                            </td>
+                                            <td id="td_1_20"></td>
+                                            <td id="td_2_20"></td>
+                                            <td id="td_2_20Change"></td>
+                                            <td id="td_3_20"></td>
+                                            <td id="td_3_20Change"></td>
+                                            <td id="td_4_20"></td>
+                                            <td id="td_4_20Change"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                                <div id="divWaitCatchments" style="display:none">
+                                    <div class="progress-label" id="divProgressLabel" style="font-weight:bold;font-size:12px;padding:5px 5px 5px 5px">Retrieving data, please wait...</div>
+
+                                    <div id="catchmentsprogressbar"></div>
+                                </div>
+                            
+
+                        </div>
+                    
+
+
+
+                    </div>
+                <table style="border:none;margin-top:0px;">
+                    <tr>
+                        <td width="250">
+                            <button id="btnStartOver">Start Over</button>
+                        </td>
+                        <td width="250">
+                            <div align="right">
+                                <button id="btnClearHUC12">Clear Selected HUC12</button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+        </div>
+        <div id="template-flowApp-NavResultsMap">
+            <style>
+                span.esriLegendServiceLabel {
+                    display: block;
+                    padding: 5px 0px 5px 0px;
+                    margin: 10px 0px 0px 0px;
+                    font-size: 14px;
+                }
+
+                .esriLegendLayerLabel {
+                    display: none;
+                }
+            </style>
+
+            <div style="padding:10px 10px 10px 10px">
+                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
+                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span><p></p>
+                <p><b>Navigation Results</b></p>
+                <input id="radMap" type="radio" name="navResults" checked />&nbsp;Map
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="radHUC12" type="radio" name="navResults" />&nbsp;View HUC12 Data
+
+                <div style="margin-top:15px;">
+                    Select a metric from the list below to color code your navigation results in the map.<p></p>
+                    Select a single value metric:<p></p>
+                    <select id="ddSingleMetric"></select><p></p>
+                </div>
+                <table style="border:none;margin-top:0px;">
+                    <tr>
+                        <td width="250">
+                            <button id="btnStartOver">Start Over</button>
+                        </td>
+                        <td width="250">
+                            <div align="right">
+                                <button id="btnClearNavigation">Clear Navigation Results</button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <div id="template-flowApp-NavResultsHUC12s">
+            <style>
+                span.esriLegendServiceLabel {
+                    display: block;
+                    padding: 5px 0px 5px 0px;
+                    margin: 10px 0px 0px 0px;
+                    font-size: 14px;
+                }
+
+                .esriLegendLayerLabel {
+                    display: none;
+                }
+            </style>
+
+            <div style="padding:5px 10px 10px 10px;" id="divNavResultData">
+                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span>
+                <div style="padding-top:10px"><b>Navigation Results</b>
+                    &nbsp;&nbsp;&nbsp;
+                    <input id="radMap" type="radio" name="navResults" />&nbsp;Map
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input id="radHUC12" type="radio" name="navResults" checked />&nbsp;View HUC12 Data
+                </div>               
+                <div style="padding-top:10px;">
+                    HUC12s from Navigation Results:<br>
+                    <select id="ddNavResults" style="margin-top:5px"></select>
+                </div>
+                <div id="divTabs" style="margin-top:10px;">
+                    <ul>
+
+                        <li><a href="#divTabs-1" style="font-size:12px">Single Metrics</a></li>
+
+                        <li><a href="#divTabs-2" style="font-size:12px">Time Series</a></li>
+
+                        <li><a href="#divTabs-4" style="font-size:12px">Ecochange</a></li>
+
+                        <li><a href="#divTabs-3" style="font-size:12px">Catchments</a></li>
+
+                    </ul>
+
+                    <div id="divTabs-1">
+                        <div style="padding-bottom:10px">
+
+                            <input type="radio" name="scenarioOption" id="radCurrent" checked />&nbsp;Current
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="scenarioOption" id="radScenarios" />&nbsp;Scenarios
+                        </div>
+                        <div id="divCurrent" style="display:none">
+                            <table>
+                                <tr>
+                                    <td colspan="2" style="padding:0px 0px 0px 0px">
+                                        <img id="imgHydrograph" width="388" height="277" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Metric</td>
+                                                <td style="font-size:10px;font-weight:bold">Annual minima (cfs)</td>
+                                                <td style="font-size:10px;font-weight:bold">Annual maxima (cfs)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">1 Day</td>
+                                                <td id="td3" style="font-size:10px"></td>
+                                                <td id="td4" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">3 Day</td>
+                                                <td id="td5" style="font-size:10px"></td>
+                                                <td id="td6" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">7 Day</td>
+                                                <td id="td7" style="font-size:10px"></td>
+                                                <td id="td8" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">30 Day</td>
+                                                <td id="td9" style="font-size:10px"></td>
+                                                <td id="td10" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">90 Day</td>
+                                                <td id="td11" style="font-size:10px"></td>
+                                                <td id="td12" style="font-size:10px"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Pulse</td>
+                                                <td style="font-size:10px;font-weight:bold">Low</td>
+                                                <td style="font-size:10px;font-weight:bold">High</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Count</td>
+                                                <td id="td17" style="font-size:10px"></td>
+                                                <td id="td18" style="font-size:10px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size:10px;font-weight:bold">Duration (days)</td>
+                                                <td id="td19" style="font-size:10px"></td>
+                                                <td id="td20" style="font-size:10px"></td>
+                                            </tr>
+
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td style="font-size: 10px; font-weight: bold">Zero flow days:</td>
+                                                <td style="font-size:10px" id="td13"></td>
+                                                <td style="font-size: 10px; font-weight: bold">Date of Min</td>
+                                                <td style="font-size:10px" id="td15"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; font-weight: bold">Baseflow index:</td>
+                                                <td style="font-size:10px" id="td14"></td>
+                                                <td style="font-size: 10px; font-weight: bold">Date of Max</td>
+                                                <td style="font-size:10px" id="td16"></td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div><!--end divCurrent-->
+                        <div id="divScenarios" style="display:none">
+                            <table id="tblScenarios">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>Baseline</th>
+                                        <th>Projected Water Use</th>
+                                        <th>&#916;, %&#916;</th>
+                                        <th>Climate Change</th>
+                                        <th>&#916;, %&#916;</th>
+                                        <th>Projected Water Use with Climate Change</th>
+                                        <th>&#916;, %&#916;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            1-Day Min (cfs)
+                                        </td>
+                                        <td id="td_1_3"></td>
+                                        <td id="td_2_3"></td>
+                                        <td id="td_2_3Change"></td>
+                                        <td id="td_3_3"></td>
+                                        <td id="td_3_3Change"></td>
+                                        <td id="td_4_3"></td>
+                                        <td id="td_4_3Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1-Day Max
+                                        </td>
+                                        <td id="td_1_4"></td>
+                                        <td id="td_2_4"></td>
+                                        <td id="td_2_4Change"></td>
+                                        <td id="td_3_4"></td>
+                                        <td id="td_3_4Change"></td>
+                                        <td id="td_4_4"></td>
+                                        <td id="td_4_4Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Min
+                                        </td>
+                                        <td id="td_1_5"></td>
+                                        <td id="td_2_5"></td>
+                                        <td id="td_2_5Change"></td>
+                                        <td id="td_3_5"></td>
+                                        <td id="td_3_5Change"></td>
+                                        <td id="td_4_5"></td>
+                                        <td id="td_4_5Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Max
+                                        </td>
+                                        <td id="td_1_6"></td>
+                                        <td id="td_2_6"></td>
+                                        <td id="td_2_6Change"></td>
+                                        <td id="td_3_6"></td>
+                                        <td id="td_3_6Change"></td>
+                                        <td id="td_4_6"></td>
+                                        <td id="td_4_6Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Min
+                                        </td>
+                                        <td id="td_1_7"></td>
+                                        <td id="td_2_7"></td>
+                                        <td id="td_2_7Change"></td>
+                                        <td id="td_3_7"></td>
+                                        <td id="td_3_7Change"></td>
+                                        <td id="td_4_7"></td>
+                                        <td id="td_4_7Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Max
+                                        </td>
+                                        <td id="td_1_8"></td>
+                                        <td id="td_2_8"></td>
+                                        <td id="td_2_8Change"></td>
+                                        <td id="td_3_8"></td>
+                                        <td id="td_3_8Change"></td>
+                                        <td id="td_4_8"></td>
+                                        <td id="td_4_8Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Min
+                                        </td>
+                                        <td id="td_1_9"></td>
+                                        <td id="td_2_9"></td>
+                                        <td id="td_2_9Change"></td>
+                                        <td id="td_3_9"></td>
+                                        <td id="td_3_9Change"></td>
+                                        <td id="td_4_9"></td>
+                                        <td id="td_4_9Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Max
+                                        </td>
+                                        <td id="td_1_10"></td>
+                                        <td id="td_2_10"></td>
+                                        <td id="td_2_10Change"></td>
+                                        <td id="td_3_10"></td>
+                                        <td id="td_3_10Change"></td>
+                                        <td id="td_4_10"></td>
+                                        <td id="td_4_10Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Min
+                                        </td>
+                                        <td id="td_1_11"></td>
+                                        <td id="td_2_11"></td>
+                                        <td id="td_2_11Change"></td>
+                                        <td id="td_3_11"></td>
+                                        <td id="td_3_11Change"></td>
+                                        <td id="td_4_11"></td>
+                                        <td id="td_4_11Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Max
+                                        </td>
+                                        <td id="td_1_12"></td>
+                                        <td id="td_2_12"></td>
+                                        <td id="td_2_12Change"></td>
+                                        <td id="td_3_12"></td>
+                                        <td id="td_3_12Change"></td>
+                                        <td id="td_4_12"></td>
+                                        <td id="td_4_12Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Zero flow days
+                                        </td>
+                                        <td id="td_1_13"></td>
+                                        <td id="td_2_13"></td>
+                                        <td id="td_2_13Change"></td>
+                                        <td id="td_3_13"></td>
+                                        <td id="td_3_13Change"></td>
+                                        <td id="td_4_13"></td>
+                                        <td id="td_4_13Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Baseflow index
+                                        </td>
+                                        <td id="td_1_14"></td>
+                                        <td id="td_2_14"></td>
+                                        <td id="td_2_14Change"></td>
+                                        <td id="td_3_14"></td>
+                                        <td id="td_3_14Change"></td>
+                                        <td id="td_4_14"></td>
+                                        <td id="td_4_14Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Min
+                                        </td>
+                                        <td id="td_1_15"></td>
+                                        <td id="td_2_15"></td>
+                                        <td id="td_2_15Change"></td>
+                                        <td id="td_3_15"></td>
+                                        <td id="td_3_15Change"></td>
+                                        <td id="td_4_15"></td>
+                                        <td id="td_4_15Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Max
+                                        </td>
+                                        <td id="td_1_16"></td>
+                                        <td id="td_2_16"></td>
+                                        <td id="td_2_16Change"></td>
+                                        <td id="td_3_16"></td>
+                                        <td id="td_3_16Change"></td>
+                                        <td id="td_4_16"></td>
+                                        <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse count
+                                        </td>
+                                        <td id="td_1_17"></td>
+                                        <td id="td_2_17"></td>
+                                        <td id="td_2_17Change"></td>
+                                        <td id="td_3_17"></td>
+                                        <td id="td_3_17Change"></td>
+                                        <td id="td_4_17"></td>
+                                        <td id="td_4_17Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse count
+                                        </td>
+                                        <td id="td_1_18"></td>
+                                        <td id="td_2_18"></td>
+                                        <td id="td_2_18Change"></td>
+                                        <td id="td_3_18"></td>
+                                        <td id="td_3_18Change"></td>
+                                        <td id="td_4_18"></td>
+                                        <td id="td_4_18Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse duration
+                                        </td>
+                                        <td id="td_1_19"></td>
+                                        <td id="td_2_19"></td>
+                                        <td id="td_2_19Change"></td>
+                                        <td id="td_3_19"></td>
+                                        <td id="td_3_19Change"></td>
+                                        <td id="td_4_19"></td>
+                                        <td id="td_4_19Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse duration
+                                        </td>
+                                        <td id="td_1_20"></td>
+                                        <td id="td_2_20"></td>
+                                        <td id="td_2_20Change"></td>
+                                        <td id="td_3_20"></td>
+                                        <td id="td_3_20Change"></td>
+                                        <td id="td_4_20"></td>
+                                        <td id="td_4_20Change"></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="divWaitSingle">
+                            <div class="progress-label" id="divProgressLabel" style="font-weight:bold;font-size:12px;padding:5px 5px 5px 5px">Retrieving data, please wait...</div>
+
+                            <div id="progressbar"></div>
+                        </div>
+                    </div>
+
+                    <div id="divTabs-2" style="height:350px;">
+
+                        <select id="ddTimeSeriesMetrics"></select>
+                        <div id="divChart" style="margin-top:15px;"></div>
+
+                    </div>
+                    <div id="divTabs-4" style="padding:0px 0px 0px 0px">
+                        <div style="padding:10px 0px 10px 10px">
+                            <select id="ddEcoScenario" style="width:80%"></select>
+                        </div>
+                        <img id="imgEcochange" width="420" height="300" />
+                        <table style="border:none;padding:0px 0px 0px 0px">
+                            <tr>
+                                <td width="100" style="font-weight:bold">
+                                    Ecosurplus:
+                                </td>
+                                <td width="200">
+                                    <span id="spanEcosurplus" />
+                                </td>
+                                <td width="100" style="font-weight:bold">
+                                    Ecodeficit:
+                                </td>
+                                <td>
+                                    <span id="spanEcodeficit" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="divTabs-3">
+
+                        <div id="divCatchments">
+                            Click on a catchment to view the single metrics.
+                        </div>
+                        <div id="divCatchmentScenarios" style="display:none">
+                            <div style="padding:10px 0px 10px 0px;font-size:12px;">
+                                Catchment:&nbsp;
+                                <span id="spanCatchmentID"></span>
+                            </div>
+                            <table id="tblCatchmentScenarios">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th style="text-align:center">Baseline</th>
+                                        <th style="text-align:center">Projected Water Use</th>
+                                        <th style="text-align:center">&#916;, %&#916;</th>
+                                        <th style="text-align:center">Climate Change</th>
+                                        <th style="text-align:center">&#916;, %&#916;</th>
+                                        <th style="text-align:center">Projected Water Use with Climate Change</th>
+                                        <th style="text-align:center">&#916;, %&#916;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            1-Day Min (cfs)
+                                        </td>
+                                        <td id="td_1_3"></td>
+                                        <td id="td_2_3"></td>
+                                        <td id="td_2_3Change"></td>
+                                        <td id="td_3_3"></td>
+                                        <td id="td_3_3Change"></td>
+                                        <td id="td_4_3"></td>
+                                        <td id="td_4_3Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1-Day Max
+                                        </td>
+                                        <td id="td_1_4"></td>
+                                        <td id="td_2_4"></td>
+                                        <td id="td_2_4Change"></td>
+                                        <td id="td_3_4"></td>
+                                        <td id="td_3_4Change"></td>
+                                        <td id="td_4_4"></td>
+                                        <td id="td_4_4Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Min
+                                        </td>
+                                        <td id="td_1_5"></td>
+                                        <td id="td_2_5"></td>
+                                        <td id="td_2_5Change"></td>
+                                        <td id="td_3_5"></td>
+                                        <td id="td_3_5Change"></td>
+                                        <td id="td_4_5"></td>
+                                        <td id="td_4_5Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3-Day Max
+                                        </td>
+                                        <td id="td_1_6"></td>
+                                        <td id="td_2_6"></td>
+                                        <td id="td_2_6Change"></td>
+                                        <td id="td_3_6"></td>
+                                        <td id="td_3_6Change"></td>
+                                        <td id="td_4_6"></td>
+                                        <td id="td_4_6Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Min
+                                        </td>
+                                        <td id="td_1_7"></td>
+                                        <td id="td_2_7"></td>
+                                        <td id="td_2_7Change"></td>
+                                        <td id="td_3_7"></td>
+                                        <td id="td_3_7Change"></td>
+                                        <td id="td_4_7"></td>
+                                        <td id="td_4_7Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7-Day Max
+                                        </td>
+                                        <td id="td_1_8"></td>
+                                        <td id="td_2_8"></td>
+                                        <td id="td_2_8Change"></td>
+                                        <td id="td_3_8"></td>
+                                        <td id="td_3_8Change"></td>
+                                        <td id="td_4_8"></td>
+                                        <td id="td_4_8Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Min
+                                        </td>
+                                        <td id="td_1_9"></td>
+                                        <td id="td_2_9"></td>
+                                        <td id="td_2_9Change"></td>
+                                        <td id="td_3_9"></td>
+                                        <td id="td_3_9Change"></td>
+                                        <td id="td_4_9"></td>
+                                        <td id="td_4_9Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            30-Day Max
+                                        </td>
+                                        <td id="td_1_10"></td>
+                                        <td id="td_2_10"></td>
+                                        <td id="td_2_10Change"></td>
+                                        <td id="td_3_10"></td>
+                                        <td id="td_3_10Change"></td>
+                                        <td id="td_4_10"></td>
+                                        <td id="td_4_10Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Min
+                                        </td>
+                                        <td id="td_1_11"></td>
+                                        <td id="td_2_11"></td>
+                                        <td id="td_2_11Change"></td>
+                                        <td id="td_3_11"></td>
+                                        <td id="td_3_11Change"></td>
+                                        <td id="td_4_11"></td>
+                                        <td id="td_4_11Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            90-Day Max
+                                        </td>
+                                        <td id="td_1_12"></td>
+                                        <td id="td_2_12"></td>
+                                        <td id="td_2_12Change"></td>
+                                        <td id="td_3_12"></td>
+                                        <td id="td_3_12Change"></td>
+                                        <td id="td_4_12"></td>
+                                        <td id="td_4_12Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Zero flow days
+                                        </td>
+                                        <td id="td_1_13"></td>
+                                        <td id="td_2_13"></td>
+                                        <td id="td_2_13Change"></td>
+                                        <td id="td_3_13"></td>
+                                        <td id="td_3_13Change"></td>
+                                        <td id="td_4_13"></td>
+                                        <td id="td_4_13Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Baseflow index
+                                        </td>
+                                        <td id="td_1_14"></td>
+                                        <td id="td_2_14"></td>
+                                        <td id="td_2_14Change"></td>
+                                        <td id="td_3_14"></td>
+                                        <td id="td_3_14Change"></td>
+                                        <td id="td_4_14"></td>
+                                        <td id="td_4_14Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Min
+                                        </td>
+                                        <td id="td_1_15"></td>
+                                        <td id="td_2_15"></td>
+                                        <td id="td_2_15Change"></td>
+                                        <td id="td_3_15"></td>
+                                        <td id="td_3_15Change"></td>
+                                        <td id="td_4_15"></td>
+                                        <td id="td_4_15Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date of Max
+                                        </td>
+                                        <td id="td_1_16"></td>
+                                        <td id="td_2_16"></td>
+                                        <td id="td_2_16Change"></td>
+                                        <td id="td_3_16"></td>
+                                        <td id="td_3_16Change"></td>
+                                        <td id="td_4_16"></td>
+                                        <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse count
+                                        </td>
+                                        <td id="td_1_17"></td>
+                                        <td id="td_2_17"></td>
+                                        <td id="td_2_17Change"></td>
+                                        <td id="td_3_17"></td>
+                                        <td id="td_3_17Change"></td>
+                                        <td id="td_4_17"></td>
+                                        <td id="td_4_17Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse count
+                                        </td>
+                                        <td id="td_1_18"></td>
+                                        <td id="td_2_18"></td>
+                                        <td id="td_2_18Change"></td>
+                                        <td id="td_3_18"></td>
+                                        <td id="td_3_18Change"></td>
+                                        <td id="td_4_18"></td>
+                                        <td id="td_4_18Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Low pulse duration
+                                        </td>
+                                        <td id="td_1_19"></td>
+                                        <td id="td_2_19"></td>
+                                        <td id="td_2_19Change"></td>
+                                        <td id="td_3_19"></td>
+                                        <td id="td_3_19Change"></td>
+                                        <td id="td_4_19"></td>
+                                        <td id="td_4_19Change"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            High pulse duration
+                                        </td>
+                                        <td id="td_1_20"></td>
+                                        <td id="td_2_20"></td>
+                                        <td id="td_2_20Change"></td>
+                                        <td id="td_3_20"></td>
+                                        <td id="td_3_20Change"></td>
+                                        <td id="td_4_20"></td>
+                                        <td id="td_4_20Change"></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div id="divWaitCatchments" style="display:none">
+                            <div class="progress-label" id="divProgressLabel" style="font-weight:bold;font-size:12px;padding:5px 5px 5px 5px">Retrieving data, please wait...</div>
+
+                            <div id="catchmentsprogressbar"></div>
+                        </div>
+
+                    </div>
+                 
+                </div>
+                <table style="border:none;margin-top:0px;">
+                    <tr>
+                        <td width="250">
+                            <button id="btnStartOver">Start Over</button>
+                        </td>
+                        <td width="250">
+                            <div align="right">
+                                <button id="btnClearNavigation">Clear Navigation Results</button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+        </div>
+    </div>
+</div>
