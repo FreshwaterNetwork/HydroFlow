@@ -13,8 +13,13 @@
             configVals: dojo.eval(config)[0],
             metricConfig:dojo.eval(metrics)[0],
 
-            addChart: function (metricConfig) {
+            previous_point:null,
+            previous_label: null,
+            container:null,
 
+            addChart: function (metricConfig,container) {
+
+                FlowAppChart.container = container;
                 var optionCount = $("#ddTimeSeriesMetrics option").size();
 
                 //see if we are dealing navigation results
@@ -53,14 +58,14 @@
                 var placeholder = $('<div>');
                 $(placeholder).attr("id", "placeholder");
                 $(placeholder).css({ "font-size": "10px", "line-height": "1.2em" });
-                $(placeholder).width(350);
+                $(placeholder).width(450);
                 $(placeholder).height(200);
                 chartDiv.append(placeholder);
 
                 var legendPlaceholder = $('<div>');
                 $(legendPlaceholder).attr("id", "legendPlaceholder");
                 $(legendPlaceholder).css({ "font-size": "8px", "line-height": "0.8em","padding-top":"15px","display":"" });
-                $(legendPlaceholder).width(400);
+                $(legendPlaceholder).width(500);
                 $(legendPlaceholder).height(30);
                 chartDiv.append(legendPlaceholder);
 
@@ -112,11 +117,12 @@
 
                 if (response.length > 0) {
                     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    var fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-                    var series1 = [];
-                    var series2 = [];
-                    var series3 = [];
-                    var series4 = [];
+                    var series1 = []; //baseline
+                    var series2 = []; //increased water use
+                    var series3 = []; //climate change
+                    var series4 = []; //both
 
                     $.each(response, function () {
                         var startDate = this.metric_start_date;
@@ -140,10 +146,11 @@
 
                     var chart = $.plot(placeholder, [                      
                         
+                        { data: series1, label: FlowAppChart.metricConfig.scenarios["1"].displayName, lines: {lineWidth:6} },
+                        { data: series4, label: FlowAppChart.metricConfig.scenarios["4"].displayName, lines: {lineWidth:6} },
                         { data: series2, label: FlowAppChart.metricConfig.scenarios["2"].displayName },
-                        { data: series3, label: FlowAppChart.metricConfig.scenarios["3"].displayName },
-                        { data: series4, label: FlowAppChart.metricConfig.scenarios["4"].displayName },
-                        { data: series1, label: FlowAppChart.metricConfig.scenarios["1"].displayName }
+                        { data: series3, label: FlowAppChart.metricConfig.scenarios["3"].displayName }                      
+                       
 
                     ], {
                         series: {
@@ -151,19 +158,24 @@
                                 show: true
                             },
                             points: {
-                                show: true
-                            }
+                                show: false
+                            },
+
+                            shadowSize:0
                         },
-                        colors: ["#afd8f8","#4da74d","#cb4b4b","#edc240"],
+                        colors: ["#edc240", "#cb4b4b", "#afd8f8", "#339933", ],
                         grid: {
-                            hoverable: false,
+                            hoverable: true,
                             clickable: false
                         },
-                        legend: {
+                        legend:{
+                            show:false
+                        },
+                        /*legend: {
                             container: $("#legendPlaceholder"),
                             noColumns:2
 
-                        },
+                        },*/
                         yaxis: {
                             //min: -1.2,
                             //max: 1.2,
@@ -175,6 +187,66 @@
                             }
                         }
                     });
+
+                    $("#placeholder").on("plothover", function (event, pos, item) {
+                       /* $("#tdBaseValue").css("font-weight", "normal");
+                        $("#tdBothValue").css("font-weight", "normal");
+                        $("#tdUseValue").css("font-weight", "normal");
+                        $("#tdChangeValue").css("font-weight", "normal");*/
+
+                        if (item) {
+                        
+                            //get the index from the series, and then use this to show all of the values
+
+                            var index = item.dataIndex;
+                            var month = fullMonths[item.series.data[index][0] - 1]
+                            $("#tdMonth1").html(month);
+                            $("#tdMonth2").html(month);
+                            $("#tdBaseValue").html(series1[index][1]);
+                            $("#tdBothValue").html(series4[index][1]);
+                            $("#tdUseValue").html(series2[index][1]);
+                            $("#tdChangeValue").html(series3[index][1]);
+                            /*switch (item.series.data[index][1]) {
+                                case series1[index][1]:
+                                    $("#tdBaseValue").css("font-weight", "900");
+                                case series4[index][1]:
+                                    $("#tdBothValue").css("font-weight", "900");
+                                case series2[index][1]:
+                                    $("#tdUseValue").css("font-weight", "900");
+                                case series3[index][1]:
+                                    $("#tdChangeValue").css("font-weight", "900");
+
+                            }*/
+
+                    } 
+                    }); //end of plot hover code
+
+
+                    //lets fill out the legend table 
+                    if ($("#tdBaseLabel").html() == "") {
+                    
+                        $("#tdBaseLabel").html(FlowAppChart.metricConfig.scenarios["1"].displayName);
+                        var baseImage = $('<img>');
+                        $(baseImage).attr("src", "plugins/flow_app/images/Yellow.png");
+                        $("#tdBaseImage").append(baseImage);
+
+                        $("#tdBothLabel").html(FlowAppChart.metricConfig.scenarios["4"].displayName);
+                        var bothImage = $('<img>');
+                        $(bothImage).attr("src", "plugins/flow_app/images/red.png");
+                        $("#tdBothImage").append(bothImage);
+
+                         $("#tdUseLabel").html(FlowAppChart.metricConfig.scenarios["2"].displayName);
+                        var useImage = $('<img>');
+                        $(useImage).attr("src", "plugins/flow_app/images/blue.png");
+                        $("#tdUseImage").append(useImage);
+
+                         $("#tdChangeLabel").html(FlowAppChart.metricConfig.scenarios["3"].displayName);
+                        var changeImage = $('<img>');
+                        $(changeImage).attr("src", "plugins/flow_app/images/green.png");
+                        $("#tdChangeImage").append(changeImage);
+                    }
+                    //get rid of any existing values
+                    $("#tdMonth1,#tdMonth2,#tdBaseValue, #tdBothValue, #tdUseValue, #tdChangeValue").html("");
                 }
                 else {
                     $("#placeholder").html("No Data Available for the Selected HUC 12");
@@ -184,6 +256,19 @@
                 $("#legendPlaceholder tr").css({ "height": "10px" });
                 
             },
+
+            show_tooltip: function(x, y, contents, z) {
+                $('<div id="bar_tooltip">' + contents + '</div>').css({
+                    top: y,//y - 45,
+                    left:x, //x - 28,
+                    'border-color': z,
+                }).appendTo(FlowAppChart.container).show();//.fadeIn();
+            },
+
+            //var previous_point = null;
+            //var previous_label = null;
+
+            
         }
     
 

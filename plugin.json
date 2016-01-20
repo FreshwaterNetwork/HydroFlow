@@ -1,8 +1,9 @@
 {    
     "css": [
-        "plugins/flow_app/css/jquery-ui.css",
-		"plugins/flow_app/css/jquery-ui.structure.min.css",
-		"plugins/flow_app/css/jquery-ui.theme.min.css"
+      "plugins/flow_app/css/jquery-ui.css",
+		  "plugins/flow_app/css/jquery-ui.structure.min.css",
+      "plugins/flow_app/css/jquery-ui.theme.min.css",
+      "plugins/flow_app/css/FlowAppStyle.css"
     ],
     "use": {
         "underscore": { "attach": "_" }

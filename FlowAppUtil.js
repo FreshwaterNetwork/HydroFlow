@@ -22,11 +22,13 @@
         "esri/tasks/locator",
         "esri/geometry/Extent",
         "esri/SpatialReference",
-         "dijit/TooltipDialog"
+         "dijit/TooltipDialog",
+         "esri/layers/FeatureLayer",
+         "esri/tasks/FeatureSet"
 
     ],
     function ($, plot, ui, FlowAppMap,FlowAppChart,FlowAppScenario,regionConfig,SimpleRenderer, SimpleFillSymbol, query, QueryTask, graphicsUtils,
-        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,SpatialReference,TooltipDialog) {
+        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,SpatialReference,TooltipDialog,FeatureLayer,FeatureSet) {
 
         
 
@@ -175,6 +177,18 @@
                 var HUC12Layer = FlowAppMap.setHUC12Map(FlowAppUtil.map, FlowAppUtil.appState.HUC8ID);
                 FlowAppMap.refreshLegend(FlowAppUtil.map);
 
+                //need to know if the HUC has any HUC12s inside.
+                var countQuery = new query();
+                countQuery.where = FlowAppUtil.configVals.layers.HUC12.basinID + " is not NULL";
+                HUC12Layer.queryCount(countQuery, function (count) {
+                    if (count == 0) {
+                        $("#divViewData").css("display", "none");
+                        $("#divNoData").css("display", "");
+                    }
+                       
+                });
+
+
                 if (FlowAppUtil.appState.HUC8Extent)
                     FlowAppUtil.map.setExtent(FlowAppUtil.appState.HUC8Extent,true);
              
@@ -185,25 +199,28 @@
                         //selectedHUC is the attributes from the seleceted HUC
                         var selectedHUC = evt.graphic.attributes;
 
-                        FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
-                        FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
-                        FlowAppUtil.setMetrics();
+                        if (!selectedHUC[FlowAppUtil.configVals.layers.HUC12.metricCheck])
+                            alert("There is no data for the selected HUC12.");
+                        else {
+                            FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
+                            FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
+                            FlowAppUtil.setMetrics();
 
-                        var extent = graphicsUtils.graphicsExtent([evt.graphic]);
-                        FlowAppUtil.map.setExtent(extent, true);
+                            var extent = graphicsUtils.graphicsExtent([evt.graphic]);
+                            FlowAppUtil.map.setExtent(extent, true);
 
 
-                        if (FlowAppMap.huc12MouseOver) {
-                            FlowAppMap.huc12MouseOver.remove();
-                            FlowAppMap.huc12MouseOver = null;
-                        }                     
+                            if (FlowAppMap.huc12MouseOver) {
+                                FlowAppMap.huc12MouseOver.remove();
+                                FlowAppMap.huc12MouseOver = null;
+                            }
 
-                        //update Display
-                        FlowAppUtil.setHUC12Metrics();
-                        FlowAppUtil.classifyByMetric();//reset the huc12 layer
+                            //update Display
+                            FlowAppUtil.setHUC12Metrics();
+                            FlowAppUtil.classifyByMetric();//reset the huc12 layer
 
-                        FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID,FlowAppUtil.map);
-
+                            FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID, FlowAppUtil.map);
+                        }
                     });
                 }
                
@@ -278,7 +295,7 @@
                 $("#divTabs").tabs({
                     activate: function (event, ui) {               
                         if (ui.newTab.index() == 1) { //this is the time series tab
-                            FlowAppChart.addChart(FlowAppUtil.metricConfig);
+                            FlowAppChart.addChart(FlowAppUtil.metricConfig,FlowAppUtil.container);
                         }
                         else if (ui.newTab.index() == 3) {
                             
@@ -305,6 +322,20 @@
                 $("#catchmentsprogressbar").progressbar({
                     value: false
                 });
+
+                $("#divEcochangeDesc").dialog({
+                    modal: true,
+                    autoOpen: false,
+                    width: 850,
+                    maxHeight:650,
+                    buttons: {
+                        CLOSE: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
+                $("#aInterpret").attr("onclick", "$('#divEcochangeDesc').dialog('open');");
 
                 FlowAppUtil.populateSingleMetrics();
                 FlowAppUtil.loadEcochange();
@@ -399,8 +430,10 @@
                     $.each(results, function (i, item) {
                         if (item.scenario_type_name == FlowAppUtil.metricConfig.scenarios[$("#ddEcoScenario").val()].scenarioName) {
                             //this is the one
-                            $("#spanEcosurplus").html(item.metric_value);
-                            return false; //exit each
+                            if (!isNaN(parseFloat(item.metric_value))) {
+                                $("#spanEcosurplus").html((Math.round((parseFloat(item.metric_value)*100) *1000)/1000).toString() + "%");                                
+                            }
+                            return false; //exit each                            
                         }
                     });
                 });
@@ -422,7 +455,9 @@
                     $.each(results, function (i, item) {
                         if (item.scenario_type_name == FlowAppUtil.metricConfig.scenarios[$("#ddEcoScenario").val()].scenarioName) {
                             //this is the one
-                            $("#spanEcodeficit").html(item.metric_value);
+                            if (!isNaN(parseFloat(item.metric_value))) {
+                                $("#spanEcodeficit").html((Math.round((parseFloat(item.metric_value) * 100) * 1000) / 1000).toString() + "%");
+                            }
                             return false; //exit each
                         }
                     });
@@ -708,8 +743,10 @@
                     classDef.breakCount = 5;
 
                     var colorRamp = new AlgorithmicColorRamp();
-                    colorRamp.fromColor = new Color.fromHex("#998ec3");
-                    colorRamp.toColor = new Color.fromHex("#f1a340");
+                    //colorRamp.fromColor = new Color.fromHex("#998ec3");
+                    //colorRamp.toColor = new Color.fromHex("#f1a340");
+                    colorRamp.fromColor = new Color.fromHex("#ffff99");
+                    colorRamp.toColor = new Color.fromHex("#336600");
                     colorRamp.algorithm = "hsv";
 
                     classDef.baseSymbol = new SimpleFillSymbol(FlowAppUtil.configVals.layers.HUC12.symbol);
@@ -832,7 +869,8 @@
                     //console.log(candidate.score);
                     if (this.score > 80) {
                         //console.log(candidate.location);
-                        var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
+                        //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
+                        var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
                         geom = this.location;
                        
                         FlowAppUtil.locationGraphic = new esri.Graphic(geom, symbol, attributes);
@@ -860,21 +898,86 @@
             },
 
             zoomToLocation: function (featureSet) {
-                if (featureSet.features.length > 0)
-                {
+                if (featureSet.features.length > 0) {
 
                     var selHUCID = featureSet.features[0].attributes[FlowAppUtil.configVals.layers.HUC8.basinID];
-                  
+
                     var extent = graphicsUtils.graphicsExtent(featureSet.features);
                     FlowAppUtil.appState.HUC8Extent = extent;
                     FlowAppUtil.appState.HUC8ID = featureSet.features[0].attributes[FlowAppUtil.configVals.layers.HUC8.basinID];
                     FlowAppUtil.appState.HUC8Name = featureSet.features[0].attributes[FlowAppUtil.configVals.layers.HUC8.displayName];
                     FlowAppUtil.showHUC12s();
-                    
-                }
 
-                //add a graphic to the map at the geocoded location            
-                FlowAppUtil.map.graphics.add(FlowAppUtil.locationGraphic);
+                    var locFeatureSet = new FeatureSet({
+                        "geometryType": "esriGeometryPoint",
+                        "spatialReference": {
+                            "wkid": 4326
+                        },
+                        features: [
+                            {
+                                "attributes": {
+                                    address: FlowAppUtil.locationGraphic.attributes.address,
+                                    locatorName: FlowAppUtil.locationGraphic.attributes.locatorName
+                                },
+                                "geometry": {
+                                    "x": FlowAppUtil.locationGraphic.geometry.x,
+                                    "y": FlowAppUtil.locationGraphic.geometry.y
+                                }
+                            }
+                        ]
+                    });
+
+                    var featureCollection = {
+                        layerDefinition: {
+                            "geometryType": "esriGeometryPoint",
+                            "objectIdField": "ObjectID",
+                            "drawingInfo": {
+                                "renderer": {
+                                    "type": "simple",
+                                    "symbol": {
+                                        "type": "esriPMS",
+                                        "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png",
+                                        "contentType": "image/png",
+                                        "width": 24,
+                                        "height": 24
+                                    }
+                                }
+                            },
+                            "fields": [
+                                {
+                                    "name": "ObjectID",
+                                    "alias": "ObjectID",
+                                    "type": "esriFieldTypeOID"
+                                },
+                                {
+                                    "name": "address",
+                                    "type": "esriFieldTypeString",
+                                    "alias": "address"
+                                },
+                                {
+                                    "name": "locatorName",
+                                    "type": "esriFieldTypeString",
+                                    "alias": "locatorName"
+                                }
+                            ]
+                        },
+
+                        featureSet: locFeatureSet
+                    };
+
+
+                    var locationFeature = new FeatureLayer(featureCollection, {
+                        mode: FeatureLayer.MODE_SNAPSHOT, id: "FlowAppFind", outfields: ["*"]
+                    });
+                    FlowAppUtil.map.addLayer(locationFeature);
+
+                }
+                else
+                    alert("This location is beyond the model boundary conditions and does not have data.");
+
+             
+
+                
             },
 
             clearMap: function () {

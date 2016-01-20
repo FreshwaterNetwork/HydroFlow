@@ -30,7 +30,8 @@ define(
 	 function (declare, PluginBase, $,_,templates, config,FlowApp,Util) {
 
 	     var configVals = dojo.eval(config)[0];
-                      
+	     var isActive = true;
+	                           
 	     return declare(PluginBase, {	        
 	         
 	         toolbarName: configVals.toolbarName,
@@ -50,17 +51,23 @@ define(
 
 	         activate: function () {
 	             
-                 if (this.FlowApp)
-	                this.FlowApp.activate();
+	             if (isActive) {
+	                 if (this.FlowApp)
+	                     this.FlowApp.activate(isActive);
+	             }
+	            
 
 	         },
 
 	         deactivate: function () {
-	             this.FlowApp.deactivate();
+	             //this.FlowApp.deactivate();
+	             isActive = false;
 	         },
 
 	         hibernate: function () {
-	             this.FlowApp.deactivate();
+	             isActive = true;
+	            this.FlowApp.deactivate();
+	            
 	         }
 	     
 

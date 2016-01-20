@@ -47,12 +47,17 @@
             <div style="padding:10px 10px 10px 10px">
                 Selected HUC8:&nbsp;<span id="spanHUC8Name"></span>
                 <p></p>
-                Now that you are viewing smaller HUC12 watersheds, you can color code them in the map using the metrics in the drop down list below.<p></p>
+                <div id="divViewData">
+                    Now that you are viewing smaller HUC12 watersheds, you can color code them in the map using the metrics in the drop down list below.<p></p>
 
-                You can also click on the HUC12 watersheds in the map to view more detailed information.
-                <p></p>
-                Select a single value metric:<p></p>
-                <select id="ddSingleMetric"></select><p></p>
+                    You can also click on the HUC12 watersheds in the map to view more detailed information.
+                    <p></p>
+                    Select a single value metric:<p></p>
+                    <select id="ddSingleMetric"></select><p></p>
+                </div>
+                <div id="divNoData" style="color:red;display:none;">
+                    This location is beyond modeling boundary conditions and does not have data.
+                </div>
                 <table style="border:none;margin-top:20px;">
                     <tr>
                         <td width="250">
@@ -198,6 +203,11 @@
                                     <td>
                                         <table>
                                             <tr>
+                                                <td colspan="3" style="font-size:12px;font-weight:bold">
+                                                    Magnitude and Duration of Annual Extreme Water Conditions
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td style="font-size:10px;font-weight:bold">Metric</td>
                                                 <td style="font-size:10px;font-weight:bold">Annual minima (cfs)</td>
                                                 <td style="font-size:10px;font-weight:bold">Annual maxima (cfs)</td>
@@ -232,6 +242,9 @@
                                     <td>
                                         <table>
                                             <tr>
+                                                <td colspan="3" style="font-size:12px;font-weight:bold">Rate and Frequency of Water Condition Changes</td>
+                                            </tr>
+                                            <tr>
                                                 <td style="font-size:10px;font-weight:bold">Pulse</td>
                                                 <td style="font-size:10px;font-weight:bold">Low</td>
                                                 <td style="font-size:10px;font-weight:bold">High</td>
@@ -253,6 +266,9 @@
                                 <tr>
                                     <td colspan="2">
                                         <table>
+                                            <tr>
+                                                <td colspan="4" style="font-size:12px;font-weight:bold">Timing of Annual Extreme Water Conditions</td>
+                                            </tr>
                                             <tr>
                                                 <td style="font-size: 10px; font-weight: bold">Zero flow days:</td>
                                                 <td style="font-size:10px" id="td13"></td>
@@ -287,9 +303,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Magnitude and Duration of Annual Extreme Water Conditions (cfs)
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
-                                            1-Day Min (cfs)
+                                            1-Day Min
                                         </td>
                                         <td id= "td_1_3"></td>                                        
                                         <td id="td_2_3"></td>
@@ -407,6 +428,11 @@
                                         <td id="td_4_12"></td>
                                         <td id="td_4_12Change"></td>
                                     </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Timing of Annual Extreme Water Conditions
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             Zero flow days
@@ -454,6 +480,11 @@
                                         <td id="td_3_16Change"></td>
                                         <td id="td_4_16"></td>
                                         <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Rate and Frequency of Water Condition Changes
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -514,19 +545,50 @@
                         </div>
                     </div>
 
-                    <div id="divTabs-2" style="height:350px;">
+                    <div id="divTabs-2" style="height:475px;">
 
+                        <div style="padding-bottom:5px">Choose a flow parameter:</div>
                         <select id="ddTimeSeriesMetrics"></select>                        
                         <div id="divChart" style="margin-top:15px;"></div>
+                        <table id="legendTable">
+                            <tr style="font-weight:bold;">
+                                <td colspan="2">Scenarios</td>
+                                <td id="tdMonth1"></td>
+                                <td colspan="2">Scenarios</td>
+                                <td id="tdMonth2"></td>
+                            </tr>
+                            <tr>
+                                <td id="tdBaseImage"></td>
+                                <td id="tdBaseLabel"></td>
+                                <td id="tdBaseValue"></td>
+                                <td id="tdBothImage"></td>
+                                <td id="tdBothLabel"></td>
+                                <td id="tdBothValue"></td>
+                            </tr>
+                             <tr>
+                                <td id="tdUseImage"></td>
+                                <td id="tdUseLabel"></td>
+                                <td id="tdUseValue"></td>
+                                <td id="tdChangeImage"></td>
+                                <td id="tdChangeLabel"></td>
+                                <td id="tdChangeValue"></td>
+                            </tr>
+                        </table>
 
 
                     </div>
-                    <div id="divTabs-4" style="padding:0px 0px 0px 0px">     
+                    <div id="divTabs-4" style="padding:0px 0px 0px 0px">   
+                        <div align="right" style="padding:5px 5px 5px 5px">
+                            <a id="aInterpret" href="javascript:void(0)"><img src="plugins/flow_app/images/system_help.png"/>How to Interpret Ecochange</a>
+                        </div>  
                         <div style="padding:10px 0px 10px 10px">
-                            <select id="ddEcoScenario" style="width:80%"></select>
+                            <div style="padding:10px 0px 10px 10px">
+                                <span>Choose a scenario:&nbsp;</span>
+                                <select id="ddEcoScenario" style="width:60%"></select>
+                            </div>
                         </div>              
                         <img id="imgEcochange" width="420" height="300" /> 
-                        <table style="border:none">
+                        <table style="border:none;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;">
                             <tr>
                                 <td width= "100" style="font-weight:bold">
                                     Ecosurplus:
@@ -539,6 +601,11 @@
                                 </td>
                                 <td>
                                     <span id="spanEcodeficit" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="font-size:12px">
+                                    These metrics represent estimates of the overall loss (ecodeficit) or gain (ecosurplus) in streamflow that may result from the scenario chosen (see Vogel et al. 2007).
                                 </td>
                             </tr>
                         </table>
@@ -568,6 +635,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr style="font-weight:bold">
+                                            <td colspan="8">
+                                                Magnitude and Duration of Annual Extreme Weather Conditions (cfs)
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 1-Day Min (cfs)
@@ -688,6 +760,11 @@
                                             <td id="td_4_12"></td>
                                             <td id="td_4_12Change"></td>
                                         </tr>
+                                        <tr style="font-weight:bold">
+                                            <td colspan="8">
+                                                Timing of Annual Extreme Water Conditions
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 Zero flow days
@@ -735,6 +812,11 @@
                                             <td id="td_3_16Change"></td>
                                             <td id="td_4_16"></td>
                                             <td id="td_4_16Change"></td>
+                                        </tr>
+                                        <tr style="font-weight:bold">
+                                            <td colspan="8">
+                                                Rate and Frequency of Water Condition Changes
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -801,6 +883,9 @@
 
 
                     </div>
+                <div id="divEcochangeDesc" title="Interpreting Ecochange">
+                    <img src="plugins/flow_app/images/EcochangeDescription.png" /><br />
+                </div>
                 <table style="border:none;margin-top:0px;">
                     <tr>
                         <td width="250">
@@ -918,6 +1003,11 @@
                                     <td>
                                         <table>
                                             <tr>
+                                                <td colspan= "3" style="font-size:12px;font-weight:bold">
+                                                    Magnitude and Duration of Annual Extreme Water Conditions
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td style="font-size:10px;font-weight:bold">Metric</td>
                                                 <td style="font-size:10px;font-weight:bold">Annual minima (cfs)</td>
                                                 <td style="font-size:10px;font-weight:bold">Annual maxima (cfs)</td>
@@ -952,6 +1042,11 @@
                                     <td>
                                         <table>
                                             <tr>
+                                                <td colspan="3" style="font-size:12px;font-weight:bold">
+                                                    Rate and Frequency of Water Condition Changes
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td style="font-size:10px;font-weight:bold">Pulse</td>
                                                 <td style="font-size:10px;font-weight:bold">Low</td>
                                                 <td style="font-size:10px;font-weight:bold">High</td>
@@ -973,6 +1068,11 @@
                                 <tr>
                                     <td colspan="2">
                                         <table>
+                                            <tr>
+                                                <td colspan="4" style="font-size:12px;font-weight:bold">
+                                                    Timing of Annual Extreme Water Conditions
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td style="font-size: 10px; font-weight: bold">Zero flow days:</td>
                                                 <td style="font-size:10px" id="td13"></td>
@@ -1007,6 +1107,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Magnitude and Duration of Annual Extreme Water Conditions (cfs)
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             1-Day Min (cfs)
@@ -1127,6 +1232,11 @@
                                         <td id="td_4_12"></td>
                                         <td id="td_4_12Change"></td>
                                     </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Timing of Annual Extreme Water Conditions
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             Zero flow days
@@ -1174,6 +1284,11 @@
                                         <td id="td_3_16Change"></td>
                                         <td id="td_4_16"></td>
                                         <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Rate and Frequency of Water Condition Changes
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -1234,18 +1349,47 @@
                         </div>
                     </div>
 
-                    <div id="divTabs-2" style="height:350px;">
+                    <div id="divTabs-2" style="height:475px;">
 
+                        <div style="padding-bottom:5px">Choose a flow parameter:</div>
                         <select id="ddTimeSeriesMetrics"></select>
                         <div id="divChart" style="margin-top:15px;"></div>
+                        <table id="legendTable">
+                            <tr style="font-weight:bold;">
+                                <td colspan="2">Scenarios</td>
+                                <td id="tdMonth1"></td>
+                                <td colspan="2">Scenarios</td>
+                                <td id="tdMonth2"></td>
+                            </tr>
+                            <tr>
+                                <td id="tdBaseImage"></td>
+                                <td id="tdBaseLabel"></td>
+                                <td id="tdBaseValue"></td>
+                                <td id="tdBothImage"></td>
+                                <td id="tdBothLabel"></td>
+                                <td id="tdBothValue"></td>
+                            </tr>
+                             <tr>
+                                <td id="tdUseImage"></td>
+                                <td id="tdUseLabel"></td>
+                                <td id="tdUseValue"></td>
+                                <td id="tdChangeImage"></td>
+                                <td id="tdChangeLabel"></td>
+                                <td id="tdChangeValue"></td>
+                            </tr>
+                        </table>
 
                     </div>
                     <div id="divTabs-4" style="padding:0px 0px 0px 0px">
+                        <div align="right" style="padding:5px 5px 5px 5px">
+                            <a id="aInterpret" href="javascript:void(0)"><img src="plugins/flow_app/images/system_help.png" />How to Interpret Ecochange</a>
+                        </div>  
                         <div style="padding:10px 0px 10px 10px">
-                            <select id="ddEcoScenario" style="width:80%"></select>
+                            <span>Choose a scenario:&nbsp;</span>
+                            <select id="ddEcoScenario" style="width:60%"></select>
                         </div>
                         <img id="imgEcochange" width="420" height="300" />
-                        <table style="border:none;padding:0px 0px 0px 0px">
+                        <table style="border:none;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px">
                             <tr>
                                 <td width="100" style="font-weight:bold">
                                     Ecosurplus:
@@ -1258,6 +1402,11 @@
                                 </td>
                                 <td>
                                     <span id="spanEcodeficit" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="font-size:12px">
+                                    These metrics represent estimates of the overall loss (ecodeficit) or gain (ecosurplus) in streamflow that may result from the scenario chosen (see Vogel et al. 2007).
                                 </td>
                             </tr>
                         </table>
@@ -1286,6 +1435,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Magnitude and Duration of Annual Extreme Weather Conditions (cfs)
+                                        </td>
+                                    </tr>
+
                                     <tr>
                                         <td>
                                             1-Day Min (cfs)
@@ -1406,6 +1561,11 @@
                                         <td id="td_4_12"></td>
                                         <td id="td_4_12Change"></td>
                                     </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Timing of Annual Extreme Water Conditions
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             Zero flow days
@@ -1453,6 +1613,11 @@
                                         <td id="td_3_16Change"></td>
                                         <td id="td_4_16"></td>
                                         <td id="td_4_16Change"></td>
+                                    </tr>
+                                    <tr style="font-weight:bold">
+                                        <td colspan="8">
+                                            Rate and Frequency of Water Condition Changes
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -1517,6 +1682,9 @@
                     </div>
                  
                 </div>
+                <div id="divEcochangeDesc" title="Interpreting Ecochange">
+                    <img src="plugins/flow_app/images/EcochangeDescription.png" /><br />
+                </div>
                 <table style="border:none;margin-top:0px;">
                     <tr>
                         <td width="250">
@@ -1533,4 +1701,5 @@
                 </table>
         </div>
     </div>
+   
 </div>

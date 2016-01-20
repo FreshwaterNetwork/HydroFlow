@@ -57,6 +57,8 @@ define([
             var tblMetrics = document.getElementById(resultsTable);
             for (var i = 1; i < tblMetrics.rows.length; i++) {
                 var trCurrent = tblMetrics.rows[i];
+                if (trCurrent.cells.length == 1)
+                    continue;
                 var baseline = parseFloat(trCurrent.cells[1].innerHTML);
                 var scenario1 = parseFloat(trCurrent.cells[2].innerHTML);
                 var scenario2 = parseFloat(trCurrent.cells[4].innerHTML);
@@ -66,15 +68,22 @@ define([
                 var lstCells = [3, 5, 7];
 
                 for (var x = 0; x < 3; x++) {
-                    var change = Math.round(Math.abs(baseline - lstScenarioes[x]) * 100) / 100;
+                    //var change = Math.round(Math.abs(baseline - lstScenarioes[x]) * 100) / 100;
+                    var change = Math.round((lstScenarioes[x] - baseline) * 100) / 100;
+                    var strChange = change.toString();
+                    if (change < 0) {
+                        strChange = "&#8209;" + Math.abs(change).toString();
+                    }
+
+
                     var percent;
                     if (baseline != 0) {
-                        percent = Math.round((change / baseline) * 100);
-                        trCurrent.cells[lstCells[x]].innerHTML = change.toString() + ", " + percent.toString() + "%";
+                        percent = Math.round((Math.abs(change) / baseline) * 100);
+                        trCurrent.cells[lstCells[x]].innerHTML = strChange + ", " + percent.toString() + "%";
                     }
                     else {
                         percent = "--";
-                        trCurrent.cells[lstCells[x]].innerHTML = change.toString() + ", " + percent;
+                        trCurrent.cells[lstCells[x]].innerHTML = strChange + ", " + percent;
                     }
                     
                     trCurrent.cells[lstCells[x]].style.textAlign = "right";

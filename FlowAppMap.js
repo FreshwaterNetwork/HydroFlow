@@ -157,7 +157,8 @@
                 else if (HUC12Info.filterString)
                     HUC12Layer.setDefinitionExpression(HUC12Info.filterString);
 
-                map.addLayer(HUC12Layer);
+                var insertIndex = map.graphicsLayerIds.indexOf(configVals.layers.StreamsLowRes.LayerID) -1;
+                map.addLayer(HUC12Layer,insertIndex);
 
                 //Add the mouse over 
                 if (!FlowAppMap.huc12MouseOver) {
@@ -236,7 +237,8 @@
                     NavResultsLayer.setRenderer(new SimpleRenderer(symbol));
                     //NavResultsLayer.setRenderer(new SimpleRenderer({ "label": NavResultsConfig.layerName, "symbol": symbol }));
 
-                    map.addLayer(NavResultsLayer);
+                    var insertIndex = map.graphicsLayerIds.indexOf(configVals.layers.StreamsLowRes.LayerID) - 1;
+                    map.addLayer(NavResultsLayer,insertIndex);
                                        
                         
 
@@ -415,8 +417,9 @@
                 var layerList = map.graphicsLayerIds;
                 for (var i = layerList.length - 1; i >= 0; i--) {
 
-                    if (layerList[i].indexOf("FlowApp") >= 0 && layerList[i].indexOf("Streams") == -1) //all layers for the tool have FlowApp in the ID
+                    if (layerList[i].indexOf("FlowApp") >= 0 && layerList[i].indexOf("Streams") == -1) { //all layers for the tool have FlowApp in the ID
                         map.removeLayer(map.getLayer(layerList[i]));
+                    }
 
                 }
 

@@ -1,0 +1,11 @@
+﻿  #bar_tooltip {
+            font-size: 13px;
+            position: absolute;
+            display: none;
+            padding: 2px;
+            border: 2px solid;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #FFF;
+            opacity: 0.8;
+        }
