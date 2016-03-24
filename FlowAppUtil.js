@@ -157,6 +157,7 @@
                     FlowAppUtil.huc8Click.remove();
                     FlowAppUtil.huc8Click = null;
                 }
+           
                 FlowAppUtil.appState.HUC12ID = null;
                 FlowAppUtil.appState.HUC12Name = null;
 
@@ -983,6 +984,16 @@
             clearMap: function () {
                 if (FlowAppUtil.map) {
                     FlowAppMap.clearMap(FlowAppUtil.map);
+
+                    //clean up the graphic events
+                    if (FlowAppUtil.huc8Click) {
+                        FlowAppUtil.huc8Click.remove();
+                        FlowAppUtil.huc8Click = null;
+                    }
+                    if (FlowAppUtil.huc12Click) {
+                        FlowAppUtil.huc12Click.remove();
+                        FlowAppUtil.huc12Click = null;
+                    }
 
                     //clean up the legend
                     if (dijit.byId("divFlowAppLegend"))
