@@ -11,26 +11,31 @@
             .esriLegendLayerLabel {
                 display: none;
             }
+            .bpad{
+                padding-bottom:10px;
+            }
         </style>
-
-
-
-        <div style="padding:10px 10px 10px 10px">
-            <p>Welcome!  This tool can help you view and analyze watershed data. You have 3 options for getting started:</p>
-            <p>
-                <b>Option 1:</b> Search for a Location (e.g. <i>town,state</i> )<br />
-                <input type="text" id="txtLocation" style="width:250px" />&nbsp;<button id="btnFindLocation">Find Location</button>
+        <div style="padding:10px">
+            <p>Welcome to HydroFlows! This tool is designed to provide you with common flow statistics that relay information on current and future water flow trends in Louisiana (<a href="plugins/HydroFlow/HydroFlows_Methods_050216.pdf" target="_blank">View Methods</a>).  You have 3 options for getting started:</p>
+            <h4>Option 1</h4>
+            <p>Search for a Location (e.g. <i>town,state</i> )<br />
+                <input type="text" id="txtLocation" style="width:250px; height:25px;" /><button class="button button-default" style="margin:-4px 0 0 6px; padding:2px 6px;" id="btnFindLocation">Find Location</button>
             </p>
-            <p>
-                <b>Option 2:</b> Click on any HUC8 watershed in the map to view more detailed HUC12 watershed data.
+            <h4>Option 2:</h4>
+            <p>Click on any <a href="plugins/HydroFlow/hydrologic_units.pdf" target="_blank">HUC8</a> watershed in the map to view more detailed <a href="plugins/HydroFlow/hydrologic_units.pdf" target="_blank">HUC12</a> watershed data.
             </p>
-            <p>
-                <b>Option 3:</b> View all available HUC12s and make your selections from there.<br />
-                <button id="btnShowAll">Show All HUC12s</button>
-            </p>
+            <h4>Option 3:</h4>
+            <p>View all available HUC12s and make your selections from there.</p>
+            <p style="text-align:center;"><button class="button button-default" id="btnShowAll">Show All HUC12s</button></p>
+			<h4>Quick Facts:</h4>
+			<ol style="padding-left:16px;">
+                <li class="bpad">We modeled all watersheds above tidal influence for both current (1983-2012) and future (2013-2042) conditions.</li>
+                <li class="bpad">Future conditions were calculated for three scenarios – climate change, projected water use (by sector), and the combination of climate change and projected water use.</li>
+                <li class="bpad">The app returns the Index of Hydrologic Alteration (IHA) flow metrics (<a href="plugins/HydroFlow/Richter_et_al_1996_ Method_for_Assessing_Hydrologic_Alteration.pdf" target="_blank">Richter et al. 1996</a>). These commonly accepted metrics provide characteristics of flow and flow alteration that influence wetlands, rivers, and other aquatic systems and the organisms, like fish, that live there.</li>
+                <li class="bpad">This app uses both the US Geological Survey’s Hydrologic Unit Classification System (HUC) and the National Hydrography Dataset. IHA metrics are shown for HUC-12 sub-watersheds (10,000-40,000 acres (15.6 to 62.5 mi2) and NHDPlus Catchments (average about 1-mi2; km2).</li>
+			</ol>
         </div>
-       
-        </div>
+    </div>
         <div id="template-flowApp-huc12s">
             <style>
                 span.esriLegendServiceLabel {
@@ -45,15 +50,20 @@
                 }                
             </style>
             <div style="padding:10px 10px 10px 10px">
-                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span>
+                <h3>Selected HUC8: <span id="spanHUC8Name"></span></h3>
                 <p></p>
                 <div id="divViewData">
-                    Now that you are viewing smaller HUC12 watersheds, you can color code them in the map using the metrics in the drop down list below.<p></p>
+                    Now, you are viewing smaller, HUC-12 sub-watersheds <b>(may take a few moments to display).<p></p>
 
-                    You can also click on the HUC12 watersheds in the map to view more detailed information.
-                    <p></p>
-                    Select a single value metric:<p></p>
-                    <select id="ddSingleMetric"></select><p></p>
+                    <p>To keep going, you have two options. You can:<br /></p>
+					
+                    <p>1. Click on a HUC-12 sub-watershed in the map to view more detailed flow information. (Note: You can also click on any HUC-12 after color-coding the map).<br /></p>
+					
+					
+                    <p>2. Select a single-value metric from the drop-down menu below to color-code the map.</p><p></p>
+                    <div class="chosen-wrap">
+                        <select id="ddSingleMetric" class="chosen sm"></select>
+                    </div>
                 </div>
                 <div id="divNoData" style="color:red;display:none;">
                     This location is beyond modeling boundary conditions and does not have data.
@@ -61,7 +71,7 @@
                 <table style="border:none;margin-top:20px;">
                     <tr>
                         <td width="250">
-                            <button id="btnStartOver">Start Over</button>
+                            <button id="btnStartOver" class="button button-default">Start Over</button>
                         </td>
                         <td width="250">
                            &nbsp;
@@ -87,13 +97,25 @@
             </style>
 
             <div style="padding:10px 10px 10px 10px">
-                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
-                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span>
-                <div style="padding:10px 10px 10px 10px">
-                    <input type="radio" name="HUC12Option" id="radView" />&nbsp;View HUC12 Data&nbsp;&nbsp;&nbsp;
-                    <input type="radio" name="HUC12Option" id="radNavigate" checked />&nbsp;Navigate
-                   
+                <h3>Selected HUC8: <span id="spanHUC8Name"></span></h3>
+                <h3>Selected HUC12: <span id="spanHUC12Name"></span></h3>
+                <div style="padding:10px 10px 10px 10px; display:flex;">
+                    <div>
+                        <label class="form-component" for="radView">
+                            <input type="radio" id="radView" name="HUC12Option">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">View HUC12 Data</span>
+                        </label>
+                         <label class="form-component" for="radNavigate">
+                            <input checked type="radio" id="radNavigate" name="HUC12Option">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">Navigate</span>
+                        </label>
+                    </div>
+                    <div style="flex:1; text-align:right;">
+                        <button id="btnClearHUC12" class="button button-default" style="margin-bottom:0;">Clear Selected HUC12</button>
+                        <button id="btnStartOver" class="button button-default" style="margin:0 0 0 5px;">Start Over</button>
+                    </div>
                 </div>
+               
                 <fieldset id="fldNavOptions" style="margin-bottom:0px;">
                     <legend>Navigation Options</legend>
                     <table style="width:500px" align="center" border= "0">
@@ -104,16 +126,36 @@
                         </tr>
                         <tr style="height:30px">
                             <td style="width:100px">Direction:</td>
-                            <td style="width:100px"><input type="radio" name="direction" id="radUpstream" checked />&nbsp;upstream</td>
-                            <td style="width:300px"><input type="radio" name="direction" id="radDownstream" />&nbsp;downstream</td>
+                            <td style="width:100px">
+                                <label class="form-component" for="radUpstream">
+                                    <input type="radio" id="radUpstream" name="direction" checked>
+                                    <div class="check"></div><span class="form-text" style="margin-left:4px;">upstream</span>
+                                </label>
+                            </td>
+                            <td style="width:300px">
+                                <label class="form-component" for="radDownstream">
+                                    <input type="radio" id="radDownstream" name="direction">
+                                    <div class="check"></div><span class="form-text" style="margin-left:4px;">downstream</span>
+                                </label>
+                            </td>
                         </tr>
                         <tr style="height:30px">
                             <td>Limit By:</td>
-                            <td><input type="radio" name="limit" id="radTime" checked />&nbsp;time (hrs)</td>
                             <td>
-                                <input type="radio" name="limit" id="radDistanceMi" />&nbsp;distance (mi)
-                                &nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="limit" id="radDistanceKm" />&nbsp;distance (km)
+                                <label class="form-component" for="radTime">
+                                    <input type="radio" id="radTime" name="limit" checked>
+                                    <div class="check"></div><span class="form-text" style="margin-left:4px;">time (hrs)</span>
+                                </label>
+                            </td>
+                            <td>
+                                <label class="form-component" for="radDistanceMi">
+                                    <input type="radio" id="radDistanceMi" name="limit">
+                                    <div class="check"></div><span class="form-text" style="margin-left:4px;">distance (mi)</span>
+                                </label>
+                                <label class="form-component" for="radDistanceKm">
+                                    <input type="radio" id="radDistanceKm" name="limit">
+                                    <div class="check"></div><span class="form-text" style="margin-left:4px;">distance (km)</span>
+                                </label>
                             </td>
                         </tr>
                         <tr style="height:30px">
@@ -124,30 +166,14 @@
                         <tr style="height:40px;vertical-align:middle">
                             <td colspan="3">
                                 <div align="center">
-                                    <button id="btnNavigation">Start Navigation</button>
+                                    <button id="btnNavigation" class="button button-default">Start Navigation</button>
                                 </div>
                             </td>
                         </tr>
                     </table>
 
                 </fieldset>
-                <table style="border:none;margin-top:0px;">
-                    <tr>
-                        <td width="250">
-                            <button id="btnStartOver">Start Over</button>
-                        </td>
-                        <td width="250">
-                            <div align="right">
-                                <button id="btnClearHUC12">Clear Selected HUC12</button>
-
-                            </div>
-
-                        </td>
-                    </tr>
-
-                </table>
             </div>
-
         </div>
         <div id="template-flowApp-HUC12Selected">
             <style>
@@ -164,13 +190,24 @@
             </style>
 
             <div style="padding:10px 10px 10px 10px">
-                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
-                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span>
+                <h3>Selected HUC8: <span id="spanHUC8Name"></span></h3>
+                <h3>Selected HUC12: <span id="spanHUC12Name"></span></h3>
                 <input type="hidden" id="hidHUC12ID"/>
-                <div style="padding:10px 10px 10px 10px">
-                    <input type="radio" name="HUC12Option" id="radHUC12View" checked />&nbsp;View HUC12 Data&nbsp;&nbsp;&nbsp;
-                    <input type="radio" name="HUC12Option" id="radHUC12Navigate" />&nbsp;Navigate
-                    
+                <div style="padding:10px 10px 10px 10px; display:flex;">
+                    <div>
+                        <label class="form-component" for="radHUC12View">
+                            <input checked type="radio" id="radHUC12View" name="HUC12Option">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">View HUC12 Data</span>
+                        </label>
+                        <label class="form-component" for="radHUC12Navigate">
+                            <input type="radio" id="radHUC12Navigate" name="HUC12Option">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">Navigate</span>
+                        </label>
+                    </div>
+                    <div style="flex:1; text-align:right;">
+                        <button id="btnClearHUC12" class="button button-default" style="margin-bottom:0;">Clear Selected HUC12</button>
+                        <button id="btnStartOver" class="button button-default" style="margin:0 0 0 5px;">Start Over</button>
+                    </div> 
                 </div>
                 <div id="divTabs">
                     <ul>
@@ -187,20 +224,22 @@
 
                     <div id="divTabs-1">          
                         <div style="padding-bottom:10px">
-                            
-                            <input type="radio" name="scenarioOption" id="radCurrent" checked />&nbsp;Current
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="scenarioOption" id="radScenarios" />&nbsp;Scenarios
+                            <label class="form-component" for="radCurrent">
+                                <input checked type="radio" id="radCurrent" name="scenarioOption">
+                                <div class="check"></div><span class="form-text" style="margin-left:4px; font-size:13px;">Current</span>
+                            </label>
+                            <label class="form-component" for="radScenarios">
+                                <input type="radio" id="radScenarios" name="scenarioOption">
+                                <div class="check"></div><span class="form-text" style="margin-left:4px; font-size:13px;">Scenarios</span>
+                            </label>
                         </div>
                         <div id="divCurrent" style="display:none">
-                            <table>
-                                <tr>
-                                    <td colspan="2" style="padding:0px 0px 0px 0px">
-                                        <img id="imgHydrograph" width="388" height="277" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                            <div style="margin:-10px auto; width:388px;">
+                                <img id="imgHydrograph" width="388" height="277" />
+                            </div>    
+                            <table style="border:none;">
+                                <tr style="background:#fff;">
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan="3" style="font-size:12px;font-weight:bold">
@@ -239,7 +278,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td>
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan="3" style="font-size:12px;font-weight:bold">Rate and Frequency of Water Condition Changes</td>
@@ -262,9 +301,7 @@
 
                                         </table>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan="4" style="font-size:12px;font-weight:bold">Timing of Annual Extreme Water Conditions</td>
@@ -546,9 +583,10 @@
                     </div>
 
                     <div id="divTabs-2" style="height:475px;">
-
-                        <div style="padding-bottom:5px">Choose a flow parameter:</div>
-                        <select id="ddTimeSeriesMetrics"></select>                        
+                        <div class="chosen-wrap">
+                            <span>Choose a flow parameter:</span>
+                            <select id="ddTimeSeriesMetrics" class="chosen"></select>
+                        </div>                        
                         <div id="divChart" style="margin-top:15px;"></div>
                         <table id="legendTable">
                             <tr style="font-weight:bold;">
@@ -579,15 +617,19 @@
                     </div>
                     <div id="divTabs-4" style="padding:0px 0px 0px 0px">   
                         <div align="right" style="padding:5px 5px 5px 5px">
-                            <a id="aInterpret" href="javascript:void(0)"><img src="plugins/flow_app/images/system_help.png"/>How to Interpret Ecochange</a>
+                            <a id="aInterpret" href="javascript:void(0)"><img style="margin:0 2px -4px 0" height="18" width="18" src="plugins/HydroFlow/images/system_help.png"/>How to Interpret Ecochange</a>
                         </div>  
                         <div style="padding:10px 0px 10px 10px">
                             <div style="padding:10px 0px 10px 10px">
-                                <span>Choose a scenario:&nbsp;</span>
-                                <select id="ddEcoScenario" style="width:60%"></select>
+                                <div class="chosen-wrap">   
+                                    <span>Choose a scenario:&nbsp;</span>
+                                    <select id="ddEcoScenario" class="chosen"></select>
+                                </div>
                             </div>
                         </div>              
-                        <img id="imgEcochange" width="420" height="300" /> 
+                        <div style="width:420px; margin:0 auto">
+                            <img id="imgEcochange" width="420" height="300" /> 
+                        </div>    
                         <table style="border:none;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;">
                             <tr>
                                 <td width= "100" style="font-weight:bold">
@@ -617,10 +659,7 @@
                                 Click on a catchment to view the single metrics.
                             </div>                                    
                             <div id="divCatchmentScenarios" style="display:none">
-                                <div style="padding:10px 0px 10px 0px;font-size:12px;">
-                                    Catchment:&nbsp;
-                                    <span id="spanCatchmentID"></span>
-                                </div>
+                                <h4>Catchment: <span id="spanCatchmentID"></span></h4>
                                 <table id="tblCatchmentScenarios">
                                     <thead>
                                         <tr>
@@ -884,24 +923,9 @@
 
                     </div>
                 <div id="divEcochangeDesc" title="Interpreting Ecochange">
-                    <img src="plugins/flow_app/images/EcochangeDescription.png" /><br />
+                    <img src="plugins/HydroFlow/images/EcochangeDescription.png" /><br />
                 </div>
-                <table style="border:none;margin-top:0px;">
-                    <tr>
-                        <td width="250">
-                            <button id="btnStartOver">Start Over</button>
-                        </td>
-                        <td width="250">
-                            <div align="right">
-                                <button id="btnClearHUC12">Clear Selected HUC12</button>
-                            </div>
-
-                        </td>
-                    </tr>
-
-                </table>
             </div>
-
         </div>
         <div id="template-flowApp-NavResultsMap">
             <style>
@@ -918,32 +942,32 @@
             </style>
 
             <div style="padding:10px 10px 10px 10px">
-                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span><br />
-                Selected HUC12:&nbsp;<span id="spanHUC12Name"></span><p></p>
-                <p><b>Navigation Results</b></p>
-                <input id="radMap" type="radio" name="navResults" checked />&nbsp;Map
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="radHUC12" type="radio" name="navResults" />&nbsp;View HUC12 Data
-
+                <h3>Selected HUC8: <span id="spanHUC8Name"></span></h3>
+                <h3>Selected HUC12: <span id="spanHUC12Name"></span></h3>
+                <h4>Navigation Results</h4>
+                <div style="display:flex;">
+                    <div> 
+                        <label class="form-component" for="radMap">
+                            <input checked type="radio" id="radMap" name="navResults">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">Map</span>
+                        </label>
+                        <label class="form-component" for="radHUC12">
+                            <input type="radio" id="radHUC12" name="navResults">
+                            <div class="check"></div><span class="form-text" style="margin-left:4px;">View HUC12 Data</span>
+                        </label>
+                    </div>
+                    <div style="flex:1; text-align:right;">
+                        <button id="btnClearNavigation" class="button button-default" style="margin-bottom:0;">Clear Navigation Results</button>
+                        <button id="btnStartOver" class="button button-default" style="margin:0 0 0 5px;">Start Over</button>
+                    </div>        
+                </div>     
                 <div style="margin-top:15px;">
                     Select a metric from the list below to color code your navigation results in the map.<p></p>
                     Select a single value metric:<p></p>
-                    <select id="ddSingleMetric"></select><p></p>
+                    <div class="chosen-wrap">
+                        <select id="ddSingleMetric" class="chosen sm"></select><p></p>
+                    </div>    
                 </div>
-                <table style="border:none;margin-top:0px;">
-                    <tr>
-                        <td width="250">
-                            <button id="btnStartOver">Start Over</button>
-                        </td>
-                        <td width="250">
-                            <div align="right">
-                                <button id="btnClearNavigation">Clear Navigation Results</button>
-                            </div>
-
-                        </td>
-                    </tr>
-
-                </table>
             </div>
         </div>
         <div id="template-flowApp-NavResultsHUC12s">
@@ -961,16 +985,29 @@
             </style>
 
             <div style="padding:5px 10px 10px 10px;" id="divNavResultData">
-                Selected HUC8:&nbsp;<span id="spanHUC8Name"></span>
-                <div style="padding-top:10px"><b>Navigation Results</b>
-                    &nbsp;&nbsp;&nbsp;
-                    <input id="radMap" type="radio" name="navResults" />&nbsp;Map
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="radHUC12" type="radio" name="navResults" checked />&nbsp;View HUC12 Data
+                <h3>Selected HUC8: <span id="spanHUC8Name"></span></h3>
+                <h4>Navigation Results</h4>
+                <div style="display:flex;">
+                    <div> 
+                        <label class="form-component" for="radMap">
+                            <input type="radio" id="radMap" name="navResults">
+                            <div class="check"></div><span class="form-text">Map</span>
+                        </label>
+                        <label class="form-component" for="radHUC12">
+                            <input type="radio" id="radHUC12" name="navResults" checked>
+                            <div class="check"></div><span class="form-text">View HUC12 Data</span>
+                        </label>
+                    </div>
+                    <div style="flex:1; text-align:right;">
+                        <button id="btnClearNavigation" class="button button-default" style="margin-bottom:0;">Clear Navigation Results</button>
+                        <button id="btnStartOver" class="button button-default" style="margin:0 0 0 5px;">Start Over</button>
+                    </div> 
                 </div>               
                 <div style="padding-top:10px;">
-                    HUC12s from Navigation Results:<br>
-                    <select id="ddNavResults" style="margin-top:5px"></select>
+                    HUC12s from Navigation Results:
+                    <div class="chosen-wrap" style="margin-top:6px;">
+                        <select id="ddNavResults" class="chosen" style="margin-top:5px"></select>
+                    </div>
                 </div>
                 <div id="divTabs" style="margin-top:10px;">
                     <ul>
@@ -987,20 +1024,22 @@
 
                     <div id="divTabs-1">
                         <div style="padding-bottom:10px">
-
-                            <input type="radio" name="scenarioOption" id="radCurrent" checked />&nbsp;Current
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="scenarioOption" id="radScenarios" />&nbsp;Scenarios
+                            <label class="form-component" for="radCurrent">
+                                <input type="radio" id="radCurrent" name="scenarioOption" checked>
+                                <div class="check"></div><span style="font-size:13px; margin-left:4px;" class="form-text">Current</span>
+                            </label>
+                            <label class="form-component" for="radScenarios">
+                                <input type="radio" id="radScenarios" name="scenarioOption">
+                                <div class="check"></div><span style="font-size:13px; margin-left:4px;" class="form-text">Scenarios</span>
+                            </label>
                         </div>
                         <div id="divCurrent" style="display:none">
-                            <table>
-                                <tr>
-                                    <td colspan="2" style="padding:0px 0px 0px 0px">
-                                        <img id="imgHydrograph" width="388" height="277" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                            <div style="margin:-10px auto; width:388px;">
+                                <img id="imgHydrograph" width="388" height="277" />
+                            </div>   
+                            <table style="border:none;">
+                                <tr style="background:#fff;">
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan= "3" style="font-size:12px;font-weight:bold">
@@ -1039,7 +1078,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td>
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan="3" style="font-size:12px;font-weight:bold">
@@ -1064,9 +1103,7 @@
 
                                         </table>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
+                                    <td style="border:none; padding:5px;">
                                         <table>
                                             <tr>
                                                 <td colspan="4" style="font-size:12px;font-weight:bold">
@@ -1088,7 +1125,6 @@
                                         </table>
 
                                     </td>
-
                                 </tr>
                             </table>
                         </div><!--end divCurrent-->
@@ -1350,9 +1386,10 @@
                     </div>
 
                     <div id="divTabs-2" style="height:475px;">
-
-                        <div style="padding-bottom:5px">Choose a flow parameter:</div>
-                        <select id="ddTimeSeriesMetrics"></select>
+                        <div class="chosen-wrap">
+                            <span>Choose a flow parameter:</span>
+                            <select id="ddTimeSeriesMetrics" class="chosen"></select>
+                        </div> 
                         <div id="divChart" style="margin-top:15px;"></div>
                         <table id="legendTable">
                             <tr style="font-weight:bold;">
@@ -1382,13 +1419,17 @@
                     </div>
                     <div id="divTabs-4" style="padding:0px 0px 0px 0px">
                         <div align="right" style="padding:5px 5px 5px 5px">
-                            <a id="aInterpret" href="javascript:void(0)"><img src="plugins/flow_app/images/system_help.png" />How to Interpret Ecochange</a>
+                            <a id="aInterpret" href="javascript:void(0)"><img style="margin:0 2px -4px 0" height="18" width="18" src="plugins/HydroFlow/images/system_help.png"/>How to Interpret Ecochange</a>
                         </div>  
                         <div style="padding:10px 0px 10px 10px">
-                            <span>Choose a scenario:&nbsp;</span>
-                            <select id="ddEcoScenario" style="width:60%"></select>
+                            <div class="chosen-wrap">   
+                                <span>Choose a scenario:&nbsp;</span>
+                                <select id="ddEcoScenario" class="chosen"></select>
+                            </div>
                         </div>
-                        <img id="imgEcochange" width="420" height="300" />
+                        <div style="width:420px; margin:0 auto">
+                            <img id="imgEcochange" width="420" height="300" /> 
+                        </div>
                         <table style="border:none;padding:0px 0px 0px 0px;margin:0px 0px 0px 0px">
                             <tr>
                                 <td width="100" style="font-weight:bold">
@@ -1417,10 +1458,7 @@
                             Click on a catchment to view the single metrics.
                         </div>
                         <div id="divCatchmentScenarios" style="display:none">
-                            <div style="padding:10px 0px 10px 0px;font-size:12px;">
-                                Catchment:&nbsp;
-                                <span id="spanCatchmentID"></span>
-                            </div>
+                            <h4>Catchment: <span id="spanCatchmentID"></span></h4>
                             <table id="tblCatchmentScenarios">
                                 <thead>
                                     <tr>
@@ -1683,22 +1721,8 @@
                  
                 </div>
                 <div id="divEcochangeDesc" title="Interpreting Ecochange">
-                    <img src="plugins/flow_app/images/EcochangeDescription.png" /><br />
+                    <img src="plugins/HydroFlow/images/EcochangeDescription.png" /><br />
                 </div>
-                <table style="border:none;margin-top:0px;">
-                    <tr>
-                        <td width="250">
-                            <button id="btnStartOver">Start Over</button>
-                        </td>
-                        <td width="250">
-                            <div align="right">
-                                <button id="btnClearNavigation">Clear Navigation Results</button>
-                            </div>
-
-                        </td>
-                    </tr>
-
-                </table>
         </div>
     </div>
    

@@ -24,11 +24,13 @@
         "esri/SpatialReference",
          "dijit/TooltipDialog",
          "esri/layers/FeatureLayer",
-         "esri/tasks/FeatureSet"
+         "esri/tasks/FeatureSet",
+         "dojo/dom"
 
     ],
     function ($, plot, ui, FlowAppMap,FlowAppChart,FlowAppScenario,regionConfig,SimpleRenderer, SimpleFillSymbol, query, QueryTask, graphicsUtils,
-        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,SpatialReference,TooltipDialog,FeatureLayer,FeatureSet) {
+        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,
+        SpatialReference,TooltipDialog,FeatureLayer,FeatureSet,dom) {
 
         
 
@@ -54,7 +56,7 @@
             waitDialog:null,
 
             setReferences: function (container, legendContainer, templates, configVals, map) {
-               
+                FlowAppUtil.parent = $(container).parent();
                 FlowAppUtil.container = container;
                 FlowAppUtil.templates = templates;
                 FlowAppUtil.configVals = configVals;
@@ -68,9 +70,6 @@
                 var placeholder = $('<div>');
                 $(placeholder).attr("id", "divFlowAppLegend");
                 $(legendContainer).append(placeholder);
-
-                    
-
             },
 
             setMetrics: function () {
@@ -78,7 +77,7 @@
                 if (!FlowAppUtil.metricConfig) {
                     $.ajax({
                         type: "GET",
-                        url: "plugins/flow_app/metrics.json",
+                        url: "plugins/HydroFlow/metrics.json",
                         async: false,
                         beforeSend: function (x) {
                             x.overrideMimeType("application/j-son;charset=UTF-8");
@@ -111,7 +110,6 @@
                     FlowAppMap.huc12MouseOver = null;
                 }
                    
-
                 $(FlowAppUtil.container).html($.trim($(FlowAppUtil.templates).find("#template-flowApp-landing").html()));
 
                 if (!($._data(document.getElementById("btnShowAll"), "events")))
@@ -172,7 +170,8 @@
                 FlowAppUtil.populateSingleMetricDropDown();
 
                 if (!($._data(document.getElementById("ddSingleMetric"), "events")))
-                    $("#ddSingleMetric").change(FlowAppUtil.classifyByMetric);
+                    //Create chosen menus
+                    $("#ddSingleMetric").chosen({width:"220px"}).change(FlowAppUtil.classifyByMetric);
 
                 //add the HUC 12 layer to the map
                 var HUC12Layer = FlowAppMap.setHUC12Map(FlowAppUtil.map, FlowAppUtil.appState.HUC8ID);
@@ -203,24 +202,26 @@
                         if (!selectedHUC[FlowAppUtil.configVals.layers.HUC12.metricCheck])
                             alert("There is no data for the selected HUC12.");
                         else {
-                            FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
-                            FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
-                            FlowAppUtil.setMetrics();
+                            $(FlowAppUtil.parent).animate({width:"700px"},400,function(){
+                                FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
+                                FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
+                                FlowAppUtil.setMetrics();
 
-                            var extent = graphicsUtils.graphicsExtent([evt.graphic]);
-                            FlowAppUtil.map.setExtent(extent, true);
+                                var extent = graphicsUtils.graphicsExtent([evt.graphic]);
+                                FlowAppUtil.map.setExtent(extent, true);
 
 
-                            if (FlowAppMap.huc12MouseOver) {
-                                FlowAppMap.huc12MouseOver.remove();
-                                FlowAppMap.huc12MouseOver = null;
-                            }
+                                if (FlowAppMap.huc12MouseOver) {
+                                    FlowAppMap.huc12MouseOver.remove();
+                                    FlowAppMap.huc12MouseOver = null;
+                                }
 
-                            //update Display
-                            FlowAppUtil.setHUC12Metrics();
-                            FlowAppUtil.classifyByMetric();//reset the huc12 layer
+                                //update Display
+                                FlowAppUtil.setHUC12Metrics();
+                                FlowAppUtil.classifyByMetric();//reset the huc12 layer
 
-                            FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID, FlowAppUtil.map);
+                                FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID, FlowAppUtil.map);
+                            })
                         }
                     });
                 }
@@ -403,7 +404,7 @@
                 
 
                 if (!($._data(document.getElementById("ddEcoScenario"), "events"))) {
-                    ddEcoScenario.change(function () {
+                    $("#ddEcoScenario").chosen({width:"60%"}).change(function () {
                         FlowAppUtil.populateEcochange();
                     })
                 }
@@ -569,7 +570,7 @@
                 //populate the single metric drop down
                 FlowAppUtil.populateSingleMetricDropDown();
                 if (!($._data(document.getElementById("ddSingleMetric"), "events")))
-                    $("#ddSingleMetric").change(FlowAppUtil.classifyByMetric);
+                    $("#ddSingleMetric").chosen({width:"220px"}).change(FlowAppUtil.classifyByMetric);
             },
 
             showNavHuc12s: function () {
@@ -599,7 +600,7 @@
                 })
 
                 if (!($._data(document.getElementById("ddNavResults"), "events"))) {
-                    ddNavResults.change(function () {
+                    $("#ddNavResults").chosen({width:"500px"}).change(function () {
                         //set up for scenarios here
                         FlowAppChart.getTimeSeriesData();
                         FlowAppUtil.populateSingleMetrics();
@@ -687,15 +688,13 @@
            
 
             startOver: function () {
-                FlowAppMap.clearMap(FlowAppUtil.map);
-                FlowAppUtil.setDefaultView();
-
-
-                var regionCoords = $.parseJSON(regionConfig).initialExtent;
-                var regionExtent = new Extent(regionCoords[0], regionCoords[1], regionCoords[2], regionCoords[3],  new SpatialReference({ wkid: 4326 /*lat-long*/ }));
-                FlowAppUtil.map.setExtent(regionExtent);
-
-
+                $(FlowAppUtil.parent).animate({width:"400px"},400,function(){
+                    FlowAppMap.clearMap(FlowAppUtil.map);
+                    FlowAppUtil.setDefaultView();
+                    var regionCoords = $.parseJSON(regionConfig).initialExtent;
+                    var regionExtent = new Extent(regionCoords[0], regionCoords[1], regionCoords[2], regionCoords[3],  new SpatialReference({ wkid: 4326 /*lat-long*/ }));
+                    FlowAppUtil.map.setExtent(regionExtent);
+                })    
             },
 
             clearState: function () {
@@ -867,9 +866,7 @@
                
                 var symbol = new esri.symbol.PictureMarkerSymbol({ "angle": 0, "xoffset": 2, "yoffset": 8, "type": "esriPMS", "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png", "contentType": "image/png", "width": 24, "height": 24 });
                 $.each(candidates.addresses, function () {
-                    //console.log(candidate.score);
                     if (this.score > 80) {
-                        //console.log(candidate.location);
                         //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
                         var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
                         geom = this.location;

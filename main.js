@@ -2,17 +2,12 @@
 
 require({
     packages: [
-	{
-	    name: "jquery",
-	    location: "//ajax.googleapis.com/ajax/libs/jquery/1.9.0",
-	    main: "jquery.min"
-	},
-	{
-	    name: "underscore",
-	    location: "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4",
-	    main: "underscore-min"
-	}
-    ]
+		{
+		    name: "jquery",
+		    location: "//ajax.googleapis.com/ajax/libs/jquery/1.9.0",
+		    main: "jquery.min"
+		}
+	]
 });
 
 define(
@@ -23,11 +18,12 @@ define(
     "dojo/text!./Templates.html",
     "dojo/text!./config.json",
     "./FlowApp",
-    "./FlowAppUtil"
+    "./FlowAppUtil",
+    "dojo/dom"
 
 
 	],
-	 function (declare, PluginBase, $,_,templates, config,FlowApp,Util) {
+	 function (declare, PluginBase, $,_,templates, config, FlowApp, Util, dom) {
 
 	     var configVals = dojo.eval(config)[0];
 	     var isActive = true;
@@ -37,16 +33,20 @@ define(
 	         toolbarName: configVals.toolbarName,
 	         toolbarType: "sidebar",
 	         showServiceLayersInLegend:false,
-	         width: configVals.dialogWidth,
+	         size: "custom",
+	         width: "400",
 	         height: configVals.dialogHeight,
 	         infoGraphic:configVals.infoGraphic,
 
 	         initialize: function (args) {
-	             this.FlowApp = new FlowApp({
+	            // Access framework parameters
+				$( dom.byId(args.container) ).parent().addClass("hyfl");
+	            this.FlowApp = new FlowApp({
 	                 context: args,
 	                 templates: templates,
 	                 config: configVals
 	             });
+	            
 	         },
 
 	         activate: function () {

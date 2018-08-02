@@ -53,7 +53,7 @@
                 var chartDiv = $("#divChart");
                 $(chartDiv).html(null);
 
-                $("#ddTimeSeriesMetrics").change(FlowAppChart.getTimeSeriesData);
+                $("#ddTimeSeriesMetrics").chosen({width:"300px"}).change(FlowAppChart.getTimeSeriesData);
 
                 var placeholder = $('<div>');
                 $(placeholder).attr("id", "placeholder");
@@ -227,22 +227,22 @@
                     
                         $("#tdBaseLabel").html(FlowAppChart.metricConfig.scenarios["1"].displayName);
                         var baseImage = $('<img>');
-                        $(baseImage).attr("src", "plugins/flow_app/images/Yellow.png");
+                        $(baseImage).attr("src", "plugins/HydroFlow/images/Yellow.png");
                         $("#tdBaseImage").append(baseImage);
 
                         $("#tdBothLabel").html(FlowAppChart.metricConfig.scenarios["4"].displayName);
                         var bothImage = $('<img>');
-                        $(bothImage).attr("src", "plugins/flow_app/images/red.png");
+                        $(bothImage).attr("src", "plugins/HydroFlow/images/red.png");
                         $("#tdBothImage").append(bothImage);
 
                          $("#tdUseLabel").html(FlowAppChart.metricConfig.scenarios["2"].displayName);
                         var useImage = $('<img>');
-                        $(useImage).attr("src", "plugins/flow_app/images/blue.png");
+                        $(useImage).attr("src", "plugins/HydroFlow/images/blue.png");
                         $("#tdUseImage").append(useImage);
 
                          $("#tdChangeLabel").html(FlowAppChart.metricConfig.scenarios["3"].displayName);
                         var changeImage = $('<img>');
-                        $(changeImage).attr("src", "plugins/flow_app/images/green.png");
+                        $(changeImage).attr("src", "plugins/HydroFlow/images/green.png");
                         $("#tdChangeImage").append(changeImage);
                     }
                     //get rid of any existing values
