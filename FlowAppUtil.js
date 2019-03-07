@@ -25,12 +25,13 @@
          "dijit/TooltipDialog",
          "esri/layers/FeatureLayer",
          "esri/tasks/FeatureSet",
+         "esri/dijit/Search",
          "dojo/dom"
 
     ],
     function ($, plot, ui, FlowAppMap,FlowAppChart,FlowAppScenario,regionConfig,SimpleRenderer, SimpleFillSymbol, query, QueryTask, graphicsUtils,
         Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,
-        SpatialReference,TooltipDialog,FeatureLayer,FeatureSet,dom) {
+        SpatialReference,TooltipDialog,FeatureLayer,FeatureSet,Search,dom) {
 
         
 
@@ -43,6 +44,7 @@
             map: null,            
             huc8Click: null,
             huc12Click: null,
+            search:null,
             //appLegend: null,
             addressLocator: null,
             locationGraphic: null, //this is the icon used to display the user entered location
@@ -61,7 +63,6 @@
                 FlowAppUtil.templates = templates;
                 FlowAppUtil.configVals = configVals;
                 FlowAppUtil.map = map;
-
                 FlowAppUtil.addressLocator = new Locator("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
                 FlowAppUtil.addressLocator.on("address-to-locations-complete", FlowAppUtil.showLocationResults);
 
@@ -111,7 +112,6 @@
                 }
                    
                 $(FlowAppUtil.container).html($.trim($(FlowAppUtil.templates).find("#template-flowApp-landing").html()));
-
                 if (!($._data(document.getElementById("btnShowAll"), "events")))
                     $("#btnShowAll").click(FlowAppUtil.showHUC12s);
 
@@ -121,8 +121,20 @@
                 var HUC8Info = FlowAppUtil.configVals.layers.HUC8;
 
                 var HUC8Layer = FlowAppMap.setDefaultMap(FlowAppUtil.map);
-                               
-
+                
+                console.log(HUC8Layer)
+                
+                
+                FlowAppUtil.search = new Search({
+                   enableInfoWindow: false,
+                   enableSuggestions: false,
+                   map: map
+                }, "hfSearch");
+                FlowAppUtil.search.on("search-results",function(e){
+                    FlowAppUtil.showHUC12s();
+                })
+                FlowAppUtil.search.startup();              
+               
                 //on map click
                 FlowAppUtil.huc8Click = FlowAppUtil.map.graphics.on("click", function (evt) {
 
@@ -690,6 +702,7 @@
             startOver: function () {
                 $(FlowAppUtil.parent).animate({width:"400px"},400,function(){
                     FlowAppMap.clearMap(FlowAppUtil.map);
+                    FlowAppUtil.search.destroy();
                     FlowAppUtil.setDefaultView();
                     var regionCoords = $.parseJSON(regionConfig).initialExtent;
                     var regionExtent = new Extent(regionCoords[0], regionCoords[1], regionCoords[2], regionCoords[3],  new SpatialReference({ wkid: 4326 /*lat-long*/ }));

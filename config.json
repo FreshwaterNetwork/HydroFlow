@@ -9,7 +9,7 @@
 		"ecochangePath":"http://ec2-54-90-210-130.compute-1.amazonaws.com/static/tnc/Final_Figs/",
 		"layers":{
 			"HUC8":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/LA_Map_Layers/MapServer/4",
+				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/10",
 				"displayName": "SUBBASIN",
 				"LayerID":"FlowAppHuc8Layer",
 				"legendName":"8 Digit Basins (HUC 8)",

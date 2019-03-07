@@ -15,12 +15,12 @@
                 padding-bottom:10px;
             }
         </style>
-        <div style="padding:10px">
+        <div id="template-hydroApp-wrap" style="padding:10px">
             <p>Welcome to HydroFlows! This tool is designed to provide you with common flow statistics that relay information on current and future water flow trends in Louisiana (<a href="plugins/HydroFlow/HydroFlows_Methods_050216.pdf" target="_blank">View Methods</a>).  You have 3 options for getting started:</p>
             <h4>Option 1</h4>
-            <p>Search for a Location (e.g. <i>town,state</i> )<br />
-                <input type="text" id="txtLocation" style="width:250px; height:25px;" /><button class="button button-default" style="margin:-4px 0 0 6px; padding:2px 6px;" id="btnFindLocation">Find Location</button>
-            </p>
+            <p>Search for a Location (e.g. <i>town,state</i> )</p>
+            <div id="hfSearch"></div>
+               <input type="text" id="txtLocation" style="width:250px; height:25px; display:none;" /><button class="button button-default" style="margin:-4px 0 0 6px; padding:2px 6px; display:none;" id="btnFindLocation">Find Location</button> 
             <h4>Option 2:</h4>
             <p>Click on any <a href="plugins/HydroFlow/hydrologic_units.pdf" target="_blank">HUC8</a> watershed in the map to view more detailed <a href="plugins/HydroFlow/hydrologic_units.pdf" target="_blank">HUC12</a> watershed data.
             </p>

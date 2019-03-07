@@ -41,3 +41,8 @@
 .dijitTooltipAbove {
     margin-top:30px; padding:0 !important; 
 }
+#template-hydroApp-wrap .arcgisSearch .searchGroup .searchInput, #template-hydroApp-wrap .arcgisSearch .searchBtn {
+    border:1px solid #ddd;
+    border-radius:3px;
+    color:#5d6165;
+}
