@@ -122,9 +122,6 @@
 
                 var HUC8Layer = FlowAppMap.setDefaultMap(FlowAppUtil.map);
                 
-                console.log(HUC8Layer)
-                
-                
                 FlowAppUtil.search = new Search({
                    enableInfoWindow: false,
                    enableSuggestions: false,
