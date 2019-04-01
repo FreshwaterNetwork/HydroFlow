@@ -125,7 +125,7 @@
                 FlowAppUtil.search = new Search({
                    enableInfoWindow: false,
                    enableSuggestions: false,
-                   map: map
+                   map: FlowAppUtil.map
                 }, "hfSearch");
                 FlowAppUtil.search.on("search-results",function(e){
                     FlowAppUtil.showHUC12s();
