@@ -115,8 +115,8 @@
                 if (!($._data(document.getElementById("btnShowAll"), "events")))
                     $("#btnShowAll").click(FlowAppUtil.showHUC12s);
 
-                if (!($._data(document.getElementById("btnFindLocation"), "events")))
-                    $("#btnFindLocation").click(FlowAppUtil.findLocation);
+                // if (!($._data(document.getElementById("btnFindLocation"), "events")))
+                //     $("#btnFindLocation").click(FlowAppUtil.findLocation);
 
                 var HUC8Info = FlowAppUtil.configVals.layers.HUC8;
 
@@ -856,19 +856,19 @@
 
            
 
-            findLocation: function () {
-                var inputAddress = $("#txtLocation").val().trim();
-                if (inputAddress == "") {
-                    alert("Please enter a location.");
-                    return;
-                }
+            // findLocation: function () {
+            //     var inputAddress = $("#txtLocation").val().trim();
+            //     if (inputAddress == "") {
+            //         alert("Please enter a location.");
+            //         return;
+            //     }
 
-                //FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
-                //var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
-                //FlowAppUtil.addressLocator.addressToLocations(options);
+            //     FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
+            //     var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
+            //     FlowAppUtil.addressLocator.addressToLocations(options);
                 
 
-            },
+            // },
 
             // showLocationResults: function (candidates) {
 
