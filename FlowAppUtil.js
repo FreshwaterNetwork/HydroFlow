@@ -63,8 +63,8 @@
                 FlowAppUtil.templates = templates;
                 FlowAppUtil.configVals = configVals;
                 FlowAppUtil.map = map;
-                FlowAppUtil.addressLocator = new Locator("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
-                FlowAppUtil.addressLocator.on("address-to-locations-complete", FlowAppUtil.showLocationResults);
+                // FlowAppUtil.addressLocator = new Locator("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+                // FlowAppUtil.addressLocator.on("address-to-locations-complete", FlowAppUtil.showLocationResults);
 
                 //Create the legend
                 //make a div for the legend
@@ -115,8 +115,8 @@
                 if (!($._data(document.getElementById("btnShowAll"), "events")))
                     $("#btnShowAll").click(FlowAppUtil.showHUC12s);
 
-                if (!($._data(document.getElementById("btnFindLocation"), "events")))
-                    $("#btnFindLocation").click(FlowAppUtil.findLocation);
+                // if (!($._data(document.getElementById("btnFindLocation"), "events")))
+                //     $("#btnFindLocation").click(FlowAppUtil.findLocation);
 
                 var HUC8Info = FlowAppUtil.configVals.layers.HUC8;
 
@@ -856,54 +856,54 @@
 
            
 
-            findLocation: function () {
-                var inputAddress = $("#txtLocation").val().trim();
-                if (inputAddress == "") {
-                    alert("Please enter a location.");
-                    return;
-                }
+            // findLocation: function () {
+            //     var inputAddress = $("#txtLocation").val().trim();
+            //     if (inputAddress == "") {
+            //         alert("Please enter a location.");
+            //         return;
+            //     }
 
-                FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
-                var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
-                FlowAppUtil.addressLocator.addressToLocations(options);
+            //     FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
+            //     var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
+            //     FlowAppUtil.addressLocator.addressToLocations(options);
                 
 
-            },
+            // },
 
-            showLocationResults: function (candidates) {
+            // showLocationResults: function (candidates) {
 
-                var geom;
+            //     var geom;
                
-                var symbol = new esri.symbol.PictureMarkerSymbol({ "angle": 0, "xoffset": 2, "yoffset": 8, "type": "esriPMS", "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png", "contentType": "image/png", "width": 24, "height": 24 });
-                $.each(candidates.addresses, function () {
-                    if (this.score > 80) {
-                        //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
-                        var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
-                        geom = this.location;
+            //     var symbol = new esri.symbol.PictureMarkerSymbol({ "angle": 0, "xoffset": 2, "yoffset": 8, "type": "esriPMS", "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png", "contentType": "image/png", "width": 24, "height": 24 });
+            //     $.each(candidates.addresses, function () {
+            //         if (this.score > 80) {
+            //             //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
+            //             var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
+            //             geom = this.location;
                        
-                        FlowAppUtil.locationGraphic = new esri.Graphic(geom, symbol, attributes);
+            //             FlowAppUtil.locationGraphic = new esri.Graphic(geom, symbol, attributes);
                        
                        
-                        return false;
-                        //break out of loop after one candidate with score greater  than 80 is found.          
-                    }
-                });
+            //             return false;
+            //             //break out of loop after one candidate with score greater  than 80 is found.          
+            //         }
+            //     });
 
-                if (geom !== undefined) {
-                    //FlowAppUtil.map.centerAndZoom(geom, 12);
-                    //use the point to select the HUC8 and zoom to that 
-                    var qryTask = new QueryTask(FlowAppUtil.configVals.layers.HUC8.service);
-                    var queryLocation = new query();
-                    queryLocation.returnGeometry = true;
-                    queryLocation.outFields = ["*"];
-                    queryLocation.geometry = geom;
-                    qryTask.execute(queryLocation, FlowAppUtil.zoomToLocation, FlowAppUtil.errorHandler);
+            //     if (geom !== undefined) {
+            //         //FlowAppUtil.map.centerAndZoom(geom, 12);
+            //         //use the point to select the HUC8 and zoom to that 
+            //         var qryTask = new QueryTask(FlowAppUtil.configVals.layers.HUC8.service);
+            //         var queryLocation = new query();
+            //         queryLocation.returnGeometry = true;
+            //         queryLocation.outFields = ["*"];
+            //         queryLocation.geometry = geom;
+            //         qryTask.execute(queryLocation, FlowAppUtil.zoomToLocation, FlowAppUtil.errorHandler);
 
 
-                }
-                else
-                    alert("The address entered was not found.");
-            },
+            //     }
+            //     else
+            //         alert("The address entered was not found.");
+            // },
 
             zoomToLocation: function (featureSet) {
                 if (featureSet.features.length > 0) {
