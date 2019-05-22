@@ -3,10 +3,10 @@
 		"toolbarName": "Hydro Flows",
 		"dialogWidth": 625,
 		"dialogHeight": 700,
-		"WaterFALLService":"https://ec2-54-90-210-130.compute-1.amazonaws.com/wf_api/",
+		"WaterFALLService":"https://rti.tnc.org/wf_api/",
 		"infoGraphic":"plugins/HydroFlow/HydroFlows6_67x10.jpg",
-		"hydrographPath":"https://ec2-54-90-210-130.compute-1.amazonaws.com/static/tnc/Baseline_hydrographs_OCT2015/Baseline_hydrograph_",
-		"ecochangePath":"https://ec2-54-90-210-130.compute-1.amazonaws.com/static/tnc/Final_Figs/",
+		"hydrographPath":"https://rti.tnc.org/static/tnc/Baseline_hydrographs_OCT2015/Baseline_hydrograph_",
+		"ecochangePath":"https://rti.tnc.org/static/tnc/Final_Figs/",
 		"layers":{
 			"HUC8":{
 				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/10",
