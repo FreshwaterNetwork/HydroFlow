@@ -24,11 +24,14 @@
         "esri/SpatialReference",
          "dijit/TooltipDialog",
          "esri/layers/FeatureLayer",
-         "esri/tasks/FeatureSet"
+         "esri/tasks/FeatureSet",
+         "esri/dijit/Search",
+         "dojo/dom"
 
     ],
     function ($, plot, ui, FlowAppMap,FlowAppChart,FlowAppScenario,regionConfig,SimpleRenderer, SimpleFillSymbol, query, QueryTask, graphicsUtils,
-        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,SpatialReference,TooltipDialog,FeatureLayer,FeatureSet) {
+        Color, Graphic, ClassBreaksDefinition,AlgorithmicColorRamp,GenerateRendererParameters,GenerateRendererTask,Legend,Locator,Extent,
+        SpatialReference,TooltipDialog,FeatureLayer,FeatureSet,Search,dom) {
 
         
 
@@ -41,6 +44,7 @@
             map: null,            
             huc8Click: null,
             huc12Click: null,
+            search:null,
             //appLegend: null,
             addressLocator: null,
             locationGraphic: null, //this is the icon used to display the user entered location
@@ -54,23 +58,19 @@
             waitDialog:null,
 
             setReferences: function (container, legendContainer, templates, configVals, map) {
-               
+                FlowAppUtil.parent = $(container).parent();
                 FlowAppUtil.container = container;
                 FlowAppUtil.templates = templates;
                 FlowAppUtil.configVals = configVals;
                 FlowAppUtil.map = map;
-
-                FlowAppUtil.addressLocator = new Locator("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
-                FlowAppUtil.addressLocator.on("address-to-locations-complete", FlowAppUtil.showLocationResults);
+                //FlowAppUtil.addressLocator = new Locator("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+                //FlowAppUtil.addressLocator.on("address-to-locations-complete", FlowAppUtil.showLocationResults);
 
                 //Create the legend
                 //make a div for the legend
                 var placeholder = $('<div>');
                 $(placeholder).attr("id", "divFlowAppLegend");
                 $(legendContainer).append(placeholder);
-
-                    
-
             },
 
             setMetrics: function () {
@@ -78,7 +78,7 @@
                 if (!FlowAppUtil.metricConfig) {
                     $.ajax({
                         type: "GET",
-                        url: "plugins/flow_app/metrics.json",
+                        url: "plugins/HydroFlow/metrics.json",
                         async: false,
                         beforeSend: function (x) {
                             x.overrideMimeType("application/j-son;charset=UTF-8");
@@ -111,20 +111,27 @@
                     FlowAppMap.huc12MouseOver = null;
                 }
                    
-
                 $(FlowAppUtil.container).html($.trim($(FlowAppUtil.templates).find("#template-flowApp-landing").html()));
-
                 if (!($._data(document.getElementById("btnShowAll"), "events")))
                     $("#btnShowAll").click(FlowAppUtil.showHUC12s);
 
-                if (!($._data(document.getElementById("btnFindLocation"), "events")))
-                    $("#btnFindLocation").click(FlowAppUtil.findLocation);
+                // if (!($._data(document.getElementById("btnFindLocation"), "events")))
+                //     $("#btnFindLocation").click(FlowAppUtil.findLocation);
 
                 var HUC8Info = FlowAppUtil.configVals.layers.HUC8;
 
                 var HUC8Layer = FlowAppMap.setDefaultMap(FlowAppUtil.map);
-                               
-
+                
+                FlowAppUtil.search = new Search({
+                   enableInfoWindow: false,
+                   enableSuggestions: false,
+                   map: FlowAppUtil.map
+                }, "hfSearch");
+                FlowAppUtil.search.on("search-results",function(e){
+                    FlowAppUtil.showHUC12s();
+                })
+                FlowAppUtil.search.startup();              
+               
                 //on map click
                 FlowAppUtil.huc8Click = FlowAppUtil.map.graphics.on("click", function (evt) {
 
@@ -172,7 +179,8 @@
                 FlowAppUtil.populateSingleMetricDropDown();
 
                 if (!($._data(document.getElementById("ddSingleMetric"), "events")))
-                    $("#ddSingleMetric").change(FlowAppUtil.classifyByMetric);
+                    //Create chosen menus
+                    $("#ddSingleMetric").chosen({width:"220px"}).change(FlowAppUtil.classifyByMetric);
 
                 //add the HUC 12 layer to the map
                 var HUC12Layer = FlowAppMap.setHUC12Map(FlowAppUtil.map, FlowAppUtil.appState.HUC8ID);
@@ -203,24 +211,26 @@
                         if (!selectedHUC[FlowAppUtil.configVals.layers.HUC12.metricCheck])
                             alert("There is no data for the selected HUC12.");
                         else {
-                            FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
-                            FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
-                            FlowAppUtil.setMetrics();
+                            $(FlowAppUtil.parent).animate({width:"700px"},400,function(){
+                                FlowAppUtil.appState.HUC12Name = selectedHUC[FlowAppUtil.configVals.layers.HUC12.displayName];
+                                FlowAppUtil.appState.HUC12ID = selectedHUC[FlowAppUtil.configVals.layers.HUC12.basinID];
+                                FlowAppUtil.setMetrics();
 
-                            var extent = graphicsUtils.graphicsExtent([evt.graphic]);
-                            FlowAppUtil.map.setExtent(extent, true);
+                                var extent = graphicsUtils.graphicsExtent([evt.graphic]);
+                                FlowAppUtil.map.setExtent(extent, true);
 
 
-                            if (FlowAppMap.huc12MouseOver) {
-                                FlowAppMap.huc12MouseOver.remove();
-                                FlowAppMap.huc12MouseOver = null;
-                            }
+                                if (FlowAppMap.huc12MouseOver) {
+                                    FlowAppMap.huc12MouseOver.remove();
+                                    FlowAppMap.huc12MouseOver = null;
+                                }
 
-                            //update Display
-                            FlowAppUtil.setHUC12Metrics();
-                            FlowAppUtil.classifyByMetric();//reset the huc12 layer
+                                //update Display
+                                FlowAppUtil.setHUC12Metrics();
+                                FlowAppUtil.classifyByMetric();//reset the huc12 layer
 
-                            FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID, FlowAppUtil.map);
+                                FlowAppMap.displaySelectedHUC12(FlowAppUtil.appState.HUC12ID, FlowAppUtil.map);
+                            })
                         }
                     });
                 }
@@ -403,7 +413,7 @@
                 
 
                 if (!($._data(document.getElementById("ddEcoScenario"), "events"))) {
-                    ddEcoScenario.change(function () {
+                    $("#ddEcoScenario").chosen({width:"60%"}).change(function () {
                         FlowAppUtil.populateEcochange();
                     })
                 }
@@ -569,7 +579,7 @@
                 //populate the single metric drop down
                 FlowAppUtil.populateSingleMetricDropDown();
                 if (!($._data(document.getElementById("ddSingleMetric"), "events")))
-                    $("#ddSingleMetric").change(FlowAppUtil.classifyByMetric);
+                    $("#ddSingleMetric").chosen({width:"220px"}).change(FlowAppUtil.classifyByMetric);
             },
 
             showNavHuc12s: function () {
@@ -599,7 +609,7 @@
                 })
 
                 if (!($._data(document.getElementById("ddNavResults"), "events"))) {
-                    ddNavResults.change(function () {
+                    $("#ddNavResults").chosen({width:"500px"}).change(function () {
                         //set up for scenarios here
                         FlowAppChart.getTimeSeriesData();
                         FlowAppUtil.populateSingleMetrics();
@@ -687,15 +697,14 @@
            
 
             startOver: function () {
-                FlowAppMap.clearMap(FlowAppUtil.map);
-                FlowAppUtil.setDefaultView();
-
-
-                var regionCoords = $.parseJSON(regionConfig).initialExtent;
-                var regionExtent = new Extent(regionCoords[0], regionCoords[1], regionCoords[2], regionCoords[3],  new SpatialReference({ wkid: 4326 /*lat-long*/ }));
-                FlowAppUtil.map.setExtent(regionExtent);
-
-
+                $(FlowAppUtil.parent).animate({width:"400px"},400,function(){
+                    FlowAppMap.clearMap(FlowAppUtil.map);
+                    FlowAppUtil.search.destroy();
+                    FlowAppUtil.setDefaultView();
+                    var regionCoords = $.parseJSON(regionConfig).initialExtent;
+                    var regionExtent = new Extent(regionCoords[0], regionCoords[1], regionCoords[2], regionCoords[3],  new SpatialReference({ wkid: 4326 /*lat-long*/ }));
+                    FlowAppUtil.map.setExtent(regionExtent);
+                })    
             },
 
             clearState: function () {
@@ -847,56 +856,54 @@
 
            
 
-            findLocation: function () {
-                var inputAddress = $("#txtLocation").val().trim();
-                if (inputAddress == "") {
-                    alert("Please enter a location.");
-                    return;
-                }
+            // findLocation: function () {
+            //     var inputAddress = $("#txtLocation").val().trim();
+            //     if (inputAddress == "") {
+            //         alert("Please enter a location.");
+            //         return;
+            //     }
 
-                FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
-                var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
-                FlowAppUtil.addressLocator.addressToLocations(options);
+            //     FlowAppUtil.addressLocator.outSpatialReference = FlowAppUtil.map.SpatialReference;
+            //     var options = { address: {"SingleLine":inputAddress}, outFields: ["Loc_name"] };
+            //     FlowAppUtil.addressLocator.addressToLocations(options);
                 
 
-            },
+            // },
 
-            showLocationResults: function (candidates) {
+            // showLocationResults: function (candidates) {
 
-                var geom;
+            //     var geom;
                
-                var symbol = new esri.symbol.PictureMarkerSymbol({ "angle": 0, "xoffset": 2, "yoffset": 8, "type": "esriPMS", "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png", "contentType": "image/png", "width": 24, "height": 24 });
-                $.each(candidates.addresses, function () {
-                    //console.log(candidate.score);
-                    if (this.score > 80) {
-                        //console.log(candidate.location);
-                        //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
-                        var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
-                        geom = this.location;
+            //     var symbol = new esri.symbol.PictureMarkerSymbol({ "angle": 0, "xoffset": 2, "yoffset": 8, "type": "esriPMS", "url": "https://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png", "contentType": "image/png", "width": 24, "height": 24 });
+            //     $.each(candidates.addresses, function () {
+            //         if (this.score > 80) {
+            //             //var attributes = { address: this.address, score: this.score, locatorName: this.attributes.Loc_name };
+            //             var attributes = { address: this.address,locatorName: this.attributes.Loc_name };
+            //             geom = this.location;
                        
-                        FlowAppUtil.locationGraphic = new esri.Graphic(geom, symbol, attributes);
+            //             FlowAppUtil.locationGraphic = new esri.Graphic(geom, symbol, attributes);
                        
                        
-                        return false;
-                        //break out of loop after one candidate with score greater  than 80 is found.          
-                    }
-                });
+            //             return false;
+            //             //break out of loop after one candidate with score greater  than 80 is found.          
+            //         }
+            //     });
 
-                if (geom !== undefined) {
-                    //FlowAppUtil.map.centerAndZoom(geom, 12);
-                    //use the point to select the HUC8 and zoom to that 
-                    var qryTask = new QueryTask(FlowAppUtil.configVals.layers.HUC8.service);
-                    var queryLocation = new query();
-                    queryLocation.returnGeometry = true;
-                    queryLocation.outFields = ["*"];
-                    queryLocation.geometry = geom;
-                    qryTask.execute(queryLocation, FlowAppUtil.zoomToLocation, FlowAppUtil.errorHandler);
+            //     if (geom !== undefined) {
+            //         //FlowAppUtil.map.centerAndZoom(geom, 12);
+            //         //use the point to select the HUC8 and zoom to that 
+            //         var qryTask = new QueryTask(FlowAppUtil.configVals.layers.HUC8.service);
+            //         var queryLocation = new query();
+            //         queryLocation.returnGeometry = true;
+            //         queryLocation.outFields = ["*"];
+            //         queryLocation.geometry = geom;
+            //         qryTask.execute(queryLocation, FlowAppUtil.zoomToLocation, FlowAppUtil.errorHandler);
 
 
-                }
-                else
-                    alert("The address entered was not found.");
-            },
+            //     }
+            //     else
+            //         alert("The address entered was not found.");
+            // },
 
             zoomToLocation: function (featureSet) {
                 if (featureSet.features.length > 0) {
@@ -937,7 +944,7 @@
                                     "type": "simple",
                                     "symbol": {
                                         "type": "esriPMS",
-                                        "url": "http://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png",
+                                        "url": "https://static.arcgis.com/images/Symbols/Basic/RedShinyPin.png",
                                         "contentType": "image/png",
                                         "width": 24,
                                         "height": 24
