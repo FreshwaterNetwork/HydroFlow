@@ -9,7 +9,7 @@
 		"ecochangePath":"https://rti.tnc.org/static/tnc/Final_Figs/",
 		"layers":{
 			"HUC8":{
-				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/10",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/13",
 				"displayName": "SUBBASIN",
 				"LayerID":"FlowAppHuc8Layer",
 				"legendName":"8 Digit Basins (HUC 8)",
