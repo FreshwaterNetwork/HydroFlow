@@ -9,7 +9,7 @@
 		"ecochangePath":"http://ec2-54-90-210-130.compute-1.amazonaws.com/static/tnc/Final_Figs/",
 		"layers":{
 			"HUC8":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/10",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/LA_Map_Layers_master/MapServer/10",
 				"displayName": "SUBBASIN",
 				"LayerID":"FlowAppHuc8Layer",
 				"legendName":"8 Digit Basins (HUC 8)",
@@ -27,7 +27,7 @@
 				}
 			},
 			"HUC12":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/RTI/MapServer/4",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/RTI/MapServer/4",
 				"displayName": "LA_HUC12.hu_12_name",
 				"basinID":"LA_HUC12.huc_12",
 				"LayerID": "FlowAppHuc12Layer",
@@ -47,7 +47,7 @@
                 }
 			},
 			"NavigationResults":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/RTI/MapServer/4",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/RTI/MapServer/4",
 				"displayName": "LA_HUC12.hu_12_name",
 				"basinID":"LA_HUC12.huc_12",						
 				"LayerID":"FlowAppNavResults",
@@ -66,7 +66,7 @@
                 }
 			},
 			"Catchments":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/RTI/MapServer/7",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/RTI/MapServer/7",
 				"displayName": "featureid",
 				"basinID":"HUC12",
 				"LayerID": "FlowAppCatchments",
@@ -84,12 +84,12 @@
                 }
 			},
 			"StreamsLowRes":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/RTI/MapServer/0",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/RTI/MapServer/0",
 				"LayerID": "FlowAppStreamsLowRes",
 				"legendName":"Streams"
 			},
 			"StreamsMedRes":{
-				"service":"http://cirrus-web-adapter-241060755.us-west-1.elb.amazonaws.com/arcgis/rest/services/FN_Louisiana/RTI/MapServer/1",
+				"service":"https://cirrus.tnc.org/arcgis/rest/services/FN_Louisiana/RTI/MapServer/1",
 				"LayerID": "FlowAppStreamsMedRes",
 				"legendName":"Streams"
 			}
